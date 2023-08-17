@@ -2,3 +2,7 @@
 log
 server
 data/temp/**
+settings.json
+.vscode/**
+.github/**
+.DS_STORE

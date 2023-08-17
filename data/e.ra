@@ -1,0 +1,13 @@
+LOAD Student
+LOAD Advisor
+LOAD Marks
+stud_f <- SELECT Stud_sex == 1 FROM Student
+adv_1 <- SELECT Adv_Id == 1 FROM Advisor
+mks_math_gt_70 <- SELECT Maths_marks > 70 FROM Marks
+cross_sf_a1 <- CROSS stud_f adv_1
+join_sf_a1 <- SELECT Advisor_id == Adv_Id FROM cross_sf_a1
+RENAME Stud_Id TO Student_Id FROM join_sf_a1
+cross_sfa1_mmgt70 <- CROSS join_sf_a1 mks_math_gt_70
+join_sfa1_mmgt70 <- SELECT Student_Id == Stud_Id FROM cross_sfa1_mmgt70
+sfa1mmgt70 <- PROJECT Stud_Id, Maths_marks FROM join_sfa1_mmgt70
+PRINT sfa1mmgt70

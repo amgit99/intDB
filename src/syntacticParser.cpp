@@ -9,7 +9,7 @@ bool syntacticParse()
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
-    }
+    } 
 
     if (possibleQueryType == "CLEAR")
         return syntacticParseCLEAR();

@@ -30,5 +30,11 @@ bool semanticParseSOURCE()
 void executeSOURCE()
 {
     logger.log("executeSOURCE");
-    return;
+    string path = "../data/"+parsedQuery.sourceFileName+".ra";
+    logger.log(path);
+
+    __SOURCE = 1;
+    ifstream inputFile(path);
+    while (getline(inputFile, command)) process_input();
+    __SOURCE = 0;
 }

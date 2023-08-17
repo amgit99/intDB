@@ -1,0 +1,7 @@
+LOAD Student
+LOAD Advisor
+LOAD Marks
+R3 <- SELECT Stud_sex == 1 FROM Student
+R4 <- SELECT Stud_age > 16 FROM R3
+P2 <- PROJECT Stud_Id, Stud_age FROM R4
+PRINT P2
