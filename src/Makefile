@@ -1,7 +1,7 @@
 # *****************************************************
 # Variables to control Makefile operation
 
-CXX = g++
+CXX = clang++ -std=c++11
 CXXFLAGS = -g -I .
 
 SRC := $(wildcard *.cpp)
@@ -23,7 +23,7 @@ clean:
 	rm -f *.o *~
 	rm -f $(EXEC_DIR)/*.o $(EXEC_DIR)/*~
 	rm -f server
-	rm -f log
+	rm -f log.txt
 
 %.o: %.cpp global.h
 

@@ -6,7 +6,7 @@
  */
 Table::Table()
 {
-    logger.log("Table::Table");
+    logger.log("Table::Table()");
 }
 
 /**
@@ -18,7 +18,7 @@ Table::Table()
  */
 Table::Table(string tableName)
 {
-    logger.log("Table::Table");
+    logger.log("Table::Table(string tableName)");
     this->sourceFileName = "../data/" + tableName + ".csv";
     this->tableName = tableName;
 }
@@ -33,7 +33,7 @@ Table::Table(string tableName)
  */
 Table::Table(string tableName, vector<string> columns)
 {
-    logger.log("Table::Table");
+    logger.log("Table::Table(string tableName, vector<string> columns)");
     this->sourceFileName = "../data/temp/" + tableName + ".csv";
     this->tableName = tableName;
     this->columns = columns;
@@ -113,7 +113,7 @@ bool Table::blockify()
     dummy.clear();
     this->distinctValuesInColumns.assign(this->columnCount, dummy);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
-    getline(fin, line);
+    getline(fin, line); // IGNORE COLUMN NAMES
     while (getline(fin, line))
     {
         stringstream s(line);
@@ -126,7 +126,7 @@ bool Table::blockify()
         }
         pageCounter++;
         this->updateStatistics(row);
-        if (pageCounter == this->maxRowsPerBlock)
+        if (pageCounter == this->maxRowsPerBlock) // PAGE LIMIT EXCEEDED 
         {
             bufferManager.writePage(this->tableName, this->blockCount, rowsInPage, pageCounter);
             this->blockCount++;
@@ -134,7 +134,7 @@ bool Table::blockify()
             pageCounter = 0;
         }
     }
-    if (pageCounter)
+    if (pageCounter) // TABLE FITS IN CURRENT PAGE
     {
         bufferManager.writePage(this->tableName, this->blockCount, rowsInPage, pageCounter);
         this->blockCount++;
@@ -253,8 +253,6 @@ void Table::getNextPage(Cursor *cursor)
             cursor->nextPage(cursor->pageIndex+1);
         }
 }
-
-
 
 /**
  * @brief called when EXPORT command is invoked to move source file to "data"
