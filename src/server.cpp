@@ -52,8 +52,8 @@ bool process_input(){
 
 int main(void){
 
-    system("rm -rf ../data/temp");
-    system("mkdir ../data/temp");
+    system("rm -rf ./data/temp");
+    system("mkdir ./data/temp");
 
     bool quit = 0;
     while(!quit){

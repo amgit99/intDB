@@ -30,7 +30,7 @@ bool semanticParseSOURCE()
 void executeSOURCE()
 {
     logger.log("executeSOURCE");
-    string path = "../data/"+parsedQuery.sourceFileName+".ra";
+    string path = "./data/"+parsedQuery.sourceFileName+".ra";
     logger.log(path);
 
     __SOURCE = 1;

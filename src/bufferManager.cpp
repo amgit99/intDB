@@ -16,7 +16,7 @@ BufferManager::BufferManager()
 Page BufferManager::getPage(string tableName, int pageIndex)
 {
     logger.log("BufferManager::getPage");
-    string pageName = "../data/temp/"+tableName + "_Page" + to_string(pageIndex);
+    string pageName = "./data/temp/"+tableName + "_Page" + to_string(pageIndex);
     if (this->inPool(pageName))
         return this->getFromPool(pageName);
     else
@@ -115,6 +115,6 @@ void BufferManager::deleteFile(string fileName)
 void BufferManager::deleteFile(string tableName, int pageIndex)
 {
     logger.log("BufferManager::deleteFile");
-    string fileName = "../data/temp/"+tableName + "_Page" + to_string(pageIndex);
+    string fileName = "./data/temp/"+tableName + "_Page" + to_string(pageIndex);
     this->deleteFile(fileName);
 }

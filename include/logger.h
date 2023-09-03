@@ -7,7 +7,7 @@ using namespace std;
 
 class Logger{
 
-    string logFile = "log.txt";
+    string logFile = "log";
     ofstream fout;
     
     public:

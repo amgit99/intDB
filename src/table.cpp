@@ -6,7 +6,7 @@
  */
 Table::Table()
 {
-    logger.log("Table::Table()");
+    logger.log("Table::Table");
 }
 
 /**
@@ -18,8 +18,8 @@ Table::Table()
  */
 Table::Table(string tableName)
 {
-    logger.log("Table::Table(string tableName)");
-    this->sourceFileName = "../data/" + tableName + ".csv";
+    logger.log("Table::Table");
+    this->sourceFileName = "data/" + tableName + ".csv";
     this->tableName = tableName;
 }
 
@@ -33,8 +33,8 @@ Table::Table(string tableName)
  */
 Table::Table(string tableName, vector<string> columns)
 {
-    logger.log("Table::Table(string tableName, vector<string> columns)");
-    this->sourceFileName = "../data/temp/" + tableName + ".csv";
+    logger.log("Table::Table");
+    this->sourceFileName = "data/temp/" + tableName + ".csv";
     this->tableName = tableName;
     this->columns = columns;
     this->columnCount = columns.size();
@@ -113,7 +113,7 @@ bool Table::blockify()
     dummy.clear();
     this->distinctValuesInColumns.assign(this->columnCount, dummy);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
-    getline(fin, line); // IGNORE COLUMN NAMES
+    getline(fin, line);
     while (getline(fin, line))
     {
         stringstream s(line);
@@ -126,7 +126,7 @@ bool Table::blockify()
         }
         pageCounter++;
         this->updateStatistics(row);
-        if (pageCounter == this->maxRowsPerBlock) // PAGE LIMIT EXCEEDED 
+        if (pageCounter == this->maxRowsPerBlock)
         {
             bufferManager.writePage(this->tableName, this->blockCount, rowsInPage, pageCounter);
             this->blockCount++;
@@ -134,7 +134,7 @@ bool Table::blockify()
             pageCounter = 0;
         }
     }
-    if (pageCounter) // TABLE FITS IN CURRENT PAGE
+    if (pageCounter)
     {
         bufferManager.writePage(this->tableName, this->blockCount, rowsInPage, pageCounter);
         this->blockCount++;
@@ -254,6 +254,8 @@ void Table::getNextPage(Cursor *cursor)
         }
 }
 
+
+
 /**
  * @brief called when EXPORT command is invoked to move source file to "data"
  * folder.
@@ -264,7 +266,7 @@ void Table::makePermanent()
     logger.log("Table::makePermanent");
     if(!this->isPermanent())
         bufferManager.deleteFile(this->sourceFileName);
-    string newSourceFile = "../data/" + this->tableName + ".csv";
+    string newSourceFile = "./data/" + this->tableName + ".csv";
     ofstream fout(newSourceFile, ios::out);
 
     //print headings
@@ -289,7 +291,7 @@ void Table::makePermanent()
 bool Table::isPermanent()
 {
     logger.log("Table::isPermanent");
-    if (this->sourceFileName == "../data/" + this->tableName + ".csv")
+    if (this->sourceFileName == "data/" + this->tableName + ".csv")
     return true;
     return false;
 }

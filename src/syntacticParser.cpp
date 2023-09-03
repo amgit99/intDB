@@ -126,7 +126,7 @@ void ParsedQuery::clear()
  */
 bool isFileExists(string tableName)
 {
-    string fileName = "../data/" + tableName + ".csv";
+    string fileName = "./data/" + tableName + ".csv";
     struct stat buffer;
     return (stat(fileName.c_str(), &buffer) == 0);
 }
@@ -140,7 +140,7 @@ bool isFileExists(string tableName)
  * @return false 
  */
 bool isQueryFile(string fileName){
-    fileName = "../data/" + fileName + ".ra";
+    fileName = "./data/" + fileName + ".ra";
     struct stat buffer;
     return (stat(fileName.c_str(), &buffer) == 0);
 }
