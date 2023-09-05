@@ -5,11 +5,9 @@
  * SYNTAX: EXPORT <relation_name> 
  */
 
-bool syntacticParseEXPORT()
-{
+bool syntacticParseEXPORT(){
     logger.log("syntacticParseEXPORT");
-    if (tokenizedQuery.size() != 2)
-    {
+    if (tokenizedQuery.size() != 2){
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -18,8 +16,7 @@ bool syntacticParseEXPORT()
     return true;
 }
 
-bool semanticParseEXPORT()
-{
+bool semanticParseEXPORT(){
     logger.log("semanticParseEXPORT");
     //Table should exist
     if (tableCatalogue.isTable(parsedQuery.exportRelationName))
@@ -28,8 +25,7 @@ bool semanticParseEXPORT()
     return false;
 }
 
-void executeEXPORT()
-{
+void executeEXPORT(){
     logger.log("executeEXPORT");
     Table* table = tableCatalogue.getTable(parsedQuery.exportRelationName);
     table->makePermanent();

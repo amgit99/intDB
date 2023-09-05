@@ -1,12 +1,10 @@
 #include "global.h"
 
-bool syntacticParse()
-{
+bool syntacticParse(){
     logger.log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
 
-    if (tokenizedQuery.size() < 2)
-    {
+    if (tokenizedQuery.size() < 2){
         cout << "SYNTAX ERROR" << endl;
         return false;
     } 
@@ -17,21 +15,42 @@ bool syntacticParse()
         return syntacticParseINDEX();
     else if (possibleQueryType == "LIST")
         return syntacticParseLIST();
-    else if (possibleQueryType == "LOAD")
+    else if (possibleQueryType == "LOAD"){
+        if(tokenizedQuery[1] == "MATRIX" && tokenizedQuery.size() > 2){
+            return syntacticParseLOADMATRIX();
+        }
         return syntacticParseLOAD();
-    else if (possibleQueryType == "PRINT")
+    }
+    else if (possibleQueryType == "PRINT"){
+        if(tokenizedQuery[1] == "MATRIX"){
+            return syntacticParsePRINTMATRIX();
+        }
         return syntacticParsePRINT();
-    else if (possibleQueryType == "RENAME")
+    }
+    else if (possibleQueryType == "RENAME"){
+        if(tokenizedQuery[1] == "MATRIX"){
+            return syntacticParseRENAMEMATRIX();
+        }
         return syntacticParseRENAME();
-    else if(possibleQueryType == "EXPORT")
+    }
+    else if(possibleQueryType == "EXPORT"){
+        if(tokenizedQuery[1] == "MATRIX"){
+            return syntacticParseEXPORTMATRIX();
+        }
         return syntacticParseEXPORT();
+    }
     else if(possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
-    else
-    {
+    else if(possibleQueryType == "TRANSPOSE")
+        if(tokenizedQuery[1] == "MATRIX")
+            return syntacticParseTRANSPOSEMATRIX();
+    else if(possibleQueryType == "CHECKSYMMETRY")
+        return syntacticParseCHECKSYMMETRY();
+    else if(possibleQueryType == "COMPUTE")
+        return syntacticParseCOMPUTE();
+    else{
         string resultantRelationName = possibleQueryType;
-        if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3)
-        {
+        if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3){
             cout << "SYNTAX ERROR" << endl;
             return false;
         }
@@ -48,8 +67,7 @@ bool syntacticParse()
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
-        else
-        {
+        else {
             cout << "SYNTAX ERROR" << endl;
             return false;
         }
@@ -57,12 +75,10 @@ bool syntacticParse()
     return false;
 }
 
-ParsedQuery::ParsedQuery()
-{
+ParsedQuery::ParsedQuery(){
 }
 
-void ParsedQuery::clear()
-{
+void ParsedQuery::clear(){
     logger.log("ParseQuery::clear");
     this->queryType = UNDETERMINED;
 
@@ -124,12 +140,18 @@ void ParsedQuery::clear()
  * @return true 
  * @return false 
  */
-bool isFileExists(string tableName)
-{
+bool isFileExists(string tableName){
     string fileName = "./data/" + tableName + ".csv";
     struct stat buffer;
     return (stat(fileName.c_str(), &buffer) == 0);
 }
+
+bool isMatExists(string matrixName){
+    string fileName = "./data/" + matrixName + ".csv";
+    struct stat buffer;
+    return (stat(fileName.c_str(), &buffer) == 0);
+}
+
 
 /**
  * @brief Checks to see if source file exists. Called when SOURCE command is

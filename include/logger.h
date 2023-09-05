@@ -1,7 +1,4 @@
-#include<iostream>
-#include<bits/stdc++.h>
-#include<sys/stat.h> 
-#include<fstream>
+#include "matrix.h"
 
 using namespace std;
 

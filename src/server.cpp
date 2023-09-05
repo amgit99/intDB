@@ -11,11 +11,11 @@ Logger logger;
 vector<string> tokenizedQuery;
 ParsedQuery parsedQuery;
 TableCatalogue tableCatalogue;
+MatrixCatalogue matrixCatalogue;
 BufferManager bufferManager;
 bool __SOURCE = 0;
 
-void doCommand()
-{
+void doCommand(){
     logger.log("doCommand");
     if (syntacticParse() && semanticParse())
         executeCommand();

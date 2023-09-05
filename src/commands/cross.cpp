@@ -4,11 +4,9 @@
  * @brief 
  * SYNTAX: R <- CROSS relation_name relation_name
  */
-bool syntacticParseCROSS()
-{
+bool syntacticParseCROSS(){
     logger.log("syntacticParseCROSS");
-    if (tokenizedQuery.size() != 5)
-    {
+    if (tokenizedQuery.size() != 5){
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -19,26 +17,22 @@ bool syntacticParseCROSS()
     return true;
 }
 
-bool semanticParseCROSS()
-{
+bool semanticParseCROSS(){
     logger.log("semanticParseCROSS");
     //Both tables must exist and resultant table shouldn't
-    if (tableCatalogue.isTable(parsedQuery.crossResultRelationName))
-    {
+    if (tableCatalogue.isTable(parsedQuery.crossResultRelationName)){
         cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isTable(parsedQuery.crossFirstRelationName) || !tableCatalogue.isTable(parsedQuery.crossSecondRelationName))
-    {
+    if (!tableCatalogue.isTable(parsedQuery.crossFirstRelationName) || !tableCatalogue.isTable(parsedQuery.crossSecondRelationName)){
         cout << "SEMANTIC ERROR: Cross relations don't exist" << endl;
         return false;
     }
     return true;
 }
 
-void executeCROSS()
-{
+void executeCROSS(){
     logger.log("executeCROSS");
 
     Table table1 = *(tableCatalogue.getTable(parsedQuery.crossFirstRelationName));
@@ -53,21 +47,17 @@ void executeCROSS()
     }
 
     //Creating list of column names
-    for (int columnCounter = 0; columnCounter < table1.columnCount; columnCounter++)
-    {
+    for (int columnCounter = 0; columnCounter < table1.columnCount; columnCounter++){
         string columnName = table1.columns[columnCounter];
-        if (table2.isColumn(columnName))
-        {
+        if (table2.isColumn(columnName)){
             columnName = parsedQuery.crossFirstRelationName + "_" + columnName;
         }
         columns.emplace_back(columnName);
     }
 
-    for (int columnCounter = 0; columnCounter < table2.columnCount; columnCounter++)
-    {
+    for (int columnCounter = 0; columnCounter < table2.columnCount; columnCounter++){
         string columnName = table2.columns[columnCounter];
-        if (table1.isColumn(columnName))
-        {
+        if (table1.isColumn(columnName)){
             columnName = parsedQuery.crossSecondRelationName + "_" + columnName;
         }
         columns.emplace_back(columnName);
@@ -83,13 +73,11 @@ void executeCROSS()
     vector<int> resultantRow;
     resultantRow.reserve(resultantTable->columnCount);
 
-    while (!row1.empty())
-    {
+    while (!row1.empty()){
 
         cursor2 = table2.getCursor();
         row2 = cursor2.getNext();
-        while (!row2.empty())
-        {
+        while (!row2.empty()){
             resultantRow = row1;
             resultantRow.insert(resultantRow.end(), row2.begin(), row2.end());
             resultantTable->writeRow<int>(resultantRow);

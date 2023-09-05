@@ -24,6 +24,8 @@ all: server
 
 server: $(OBJS) $(COMMANDS_OBJS)
 	$(CXX) $(CXXFLAGS) -o ./bin/$@ $(OBJS) $(COMMANDS_OBJS)
+	cp ./matrix.csv ./data/matrix.csv
+	./bin/server
 
 print: 
 	echo $(COMMANDS_OBJS)

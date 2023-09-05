@@ -1,7 +1,6 @@
 #include "cursor.h"
 
-enum IndexingStrategy
-{
+enum IndexingStrategy{
     BTREE,
     HASH,
     NOTHING
@@ -16,8 +15,7 @@ enum IndexingStrategy
  * JOIN, SORT, CROSS and DISTINCT). 
  *
  */
-class Table
-{
+class Table{
     vector<unordered_set<int>> distinctValuesInColumns;
 
 public:
@@ -59,11 +57,9 @@ public:
  * @param row 
  */
 template <typename T>
-void writeRow(vector<T> row, ostream &fout)
-{
+void writeRow(vector<T> row, ostream &fout){
     logger.log("Table::printRow");
-    for (int columnCounter = 0; columnCounter < row.size(); columnCounter++)
-    {
+    for (int columnCounter = 0; columnCounter < row.size(); columnCounter++){
         if (columnCounter != 0)
             fout << ", ";
         fout << row[columnCounter];
@@ -79,8 +75,7 @@ void writeRow(vector<T> row, ostream &fout)
  * @param row 
  */
 template <typename T>
-void writeRow(vector<T> row)
-{
+void writeRow(vector<T> row){
     logger.log("Table::printRow");
     ofstream fout(this->sourceFileName, ios::app);
     this->writeRow(row, fout);

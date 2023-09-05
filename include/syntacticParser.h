@@ -1,9 +1,8 @@
-#include "tableCatalogue.h"
+#include "matrixCatalogue.h"
 
 using namespace std;
 
-enum QueryType
-{
+enum QueryType{
     CLEAR,
     CROSS,
     DISTINCT,
@@ -18,11 +17,17 @@ enum QueryType
     SELECTION,
     SORT,
     SOURCE,
+    LOAD_MATRIX,
+    PRINT_MATRIX,
+    TRANSPOSE_MATRIX,
+    RENAME_MATRIX,
+    EXPORT_MATRIX,
+    COMPUTE,
+    CHECKSYMMETRY,
     UNDETERMINED
 };
 
-enum BinaryOperator
-{
+enum BinaryOperator{
     LESS_THAN,
     GREATER_THAN,
     LEQ,
@@ -32,22 +37,19 @@ enum BinaryOperator
     NO_BINOP_CLAUSE
 };
 
-enum SortingStrategy
-{
+enum SortingStrategy{
     ASC,
     DESC,
     NO_SORT_CLAUSE
 };
 
-enum SelectType
-{
+enum SelectType{
     COLUMN,
     INT_LITERAL,
     NO_SELECT_CLAUSE
 };
 
-class ParsedQuery
-{
+class ParsedQuery{
 
 public:
     QueryType queryType = UNDETERMINED;
@@ -75,7 +77,6 @@ public:
     string joinSecondColumnName = "";
 
     string loadRelationName = "";
-
     string printRelationName = "";
 
     string projectionResultRelationName = "";
@@ -93,14 +94,21 @@ public:
     string selectionFirstColumnName = "";
     string selectionSecondColumnName = "";
     int selectionIntLiteral = 0;
-
     SortingStrategy sortingStrategy = NO_SORT_CLAUSE;
     string sortResultRelationName = "";
     string sortColumnName = "";
     string sortRelationName = "";
-
     string sourceFileName = "";
-
+    
+    string loadMatrixName = "";
+    string printMatrixName = ""; 
+    string transposeMatrixName = "";
+    string renameMatrixName = "";
+    string checkSymmetryName = "";
+    string computeName = "";
+    string exportMatrixName = "";
+    
+    
     ParsedQuery();
     void clear();
 };
@@ -119,7 +127,15 @@ bool syntacticParsePROJECTION();
 bool syntacticParseRENAME();
 bool syntacticParseSELECTION();
 bool syntacticParseSORT();
+bool syntacticParseLOADMATRIX();
+bool syntacticParsePRINTMATRIX();
+bool syntacticParseTRANSPOSEMATRIX();
+bool syntacticParseEXPORTMATRIX();
+bool syntacticParseRENAMEMATRIX();
+bool syntacticParseCHECKSYMMETRY();
+bool syntacticParseCOMPUTE();
 bool syntacticParseSOURCE();
 
 bool isFileExists(string tableName);
+bool isMatExists(string matrixName);
 bool isQueryFile(string fileName);

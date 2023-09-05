@@ -6,8 +6,7 @@
  * be added(removed) to(from) the tableCatalogue. 
  *
  */
-class TableCatalogue
-{
+class TableCatalogue{
 
     unordered_map<string, Table*> tables;
 

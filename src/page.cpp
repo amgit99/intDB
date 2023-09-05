@@ -3,8 +3,7 @@
  * @brief Construct a new Page object. Never used as part of the code
  *
  */
-Page::Page()
-{
+Page::Page(){
     this->pageName = "";
     this->tableName = "";
     this->pageIndex = -1;
@@ -25,8 +24,7 @@ Page::Page()
  * @param tableName 
  * @param pageIndex 
  */
-Page::Page(string tableName, int pageIndex)
-{
+Page::Page(string tableName, int pageIndex){
     logger.log("Page::Page");
     this->tableName = tableName;
     this->pageIndex = pageIndex;
@@ -40,10 +38,8 @@ Page::Page(string tableName, int pageIndex)
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pageIndex];
     int number;
-    for (uint rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
-    {
-        for (int columnCounter = 0; columnCounter < columnCount; columnCounter++)
-        {
+    for (uint rowCounter = 0; rowCounter < this->rowCount; rowCounter++){
+        for (int columnCounter = 0; columnCounter < columnCount; columnCounter++){
             fin >> number;
             this->rows[rowCounter][columnCounter] = number;
         }
@@ -52,13 +48,56 @@ Page::Page(string tableName, int pageIndex)
 }
 
 /**
+ * @brief Construct a new Page:: Page object for a matrix
+ * @param matrix
+ * @param pageIndex
+ */
+Page::Page(Matrix &matrix, int pageIndex){
+    logger.log("Page (matrix)::Page");
+    this->tableName = matrix.matrixName;
+    this->pageIndex = pageIndex;
+    this->pageName = "./data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
+    vector<int> row(matrix.sliceSize, 0);
+    this->rows.assign(matrix.sliceSize, row);
+    ifstream fin(pageName, ios::in);
+    this->rowCount = matrix.rowsPerBlockCount[pageIndex];
+    this->columnCount = matrix.colsPerBlockCount[pageIndex];
+    int number;
+    for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++){
+        for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++){
+            fin >> number;
+            this->rows[rowCounter][columnCounter] = number;
+        }
+    }
+    fin.close();
+}
+
+/**
+ * @brief Construct a new Page:: Page object for a matrix
+ *
+ * @param matrix
+ * @param rowCount
+ * @param colCount
+ * @param data
+ * @param pageIndex
+ */
+Page::Page(string matrixName, int rowCount, int colCount, vector<vector<int>>& data, int pageIndex){
+    logger.log("Page::Page");
+    this->tableName = matrixName;
+    this->rowCount = rowCount;
+    this->columnCount = colCount;
+    this->pageIndex = pageIndex;
+    this->pageName = "./data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
+    this->rows = data;
+}
+
+/**
  * @brief Get row from page indexed by rowIndex
  * 
  * @param rowIndex 
  * @return vector<int> 
  */
-vector<int> Page::getRow(int rowIndex)
-{
+vector<int> Page::getRow(int rowIndex){
     logger.log("Page::getRow");
     vector<int> result;
     result.clear();
@@ -67,8 +106,7 @@ vector<int> Page::getRow(int rowIndex)
     return this->rows[rowIndex];
 }
 
-Page::Page(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount)
-{
+Page::Page(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount){
     logger.log("Page::Page");
     this->tableName = tableName;
     this->pageIndex = pageIndex;
@@ -82,14 +120,12 @@ Page::Page(string tableName, int pageIndex, vector<vector<int>> rows, int rowCou
  * @brief writes current page contents to file.
  * 
  */
-void Page::writePage()
-{
+void Page::writePage(){
     logger.log("Page::writePage");
     ofstream fout(this->pageName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
-    {
-        for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++)
-        {
+    logger.log("pageName:: "+this->pageName);
+    for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++){
+        for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++){
             if (columnCounter != 0)
                 fout << " ";
             fout << this->rows[rowCounter][columnCounter];
