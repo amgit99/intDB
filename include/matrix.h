@@ -24,7 +24,8 @@ public:
     vector<uint> rowsPerBlockCount;
     vector<uint> colsPerBlockCount;
     vector<uint> rowLength; // sum of byte length of all data items in a row of the matrix (is a stats Attribute)
-    vector<uint> writeOffsets; 
+    vector<uint> writeOffsets;
+    vector<uint> printOffsets; 
 
     Matrix();
     Matrix(string matrixName);

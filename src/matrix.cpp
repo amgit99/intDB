@@ -38,9 +38,11 @@ bool Matrix::load(){
 bool Matrix::blockify(vector<int> &offsets){
     logger.log("Matrix::blockify"); 
     this->writeOffsets.resize(this->rowCount+1, this->columnCount);
+    this->printOffsets.resize(PRINT_COUNT+1, 0);
+    this->writeOffsets[0] = 0;
+    this->printOffsets[0] = 0;
     this->rowsPerBlockCount.resize(this->blockCount, 0);
     this->colsPerBlockCount.resize(this->blockCount, 0);
-    this->writeOffsets[0] = 0;
     
     // INITIALIZE VECTOR THAT WILL HOLD VALUES AND MAKE PAGES FROM THAT;
     vector<vector<int>> pageVector(this->sliceSize, vector<int>(this->sliceSize));
@@ -49,22 +51,25 @@ bool Matrix::blockify(vector<int> &offsets){
 
     for(int i=0; i<this->verticalSliceCount; ++i){
         int lineNumber = i*this->sliceSize;
+
         for(int j=0; j<this->horizontalSliceCount; ++j){
             int wordNumber = j*this->sliceSize;
             int lineOffset, wordOffset;
 
             for(lineOffset=0; lineNumber+lineOffset<this->rowCount && lineOffset<this->sliceSize; ++lineOffset){
                 int trueLine = lineNumber+lineOffset;
-                wordOffset = 0;
+                wordOffset = 0; 
 
                 file.seekg(offsets[trueLine]);
 
                 char ch; string number = "";
-                int charCount = 0, digitCount = 0, numberCount = 0;
+                int charCount = 0, digitCount = 0;
                 while (file.get(ch)) {
                     if(ch==',' || ch=='\n'){
                         pageVector[lineOffset][wordOffset] = stoi(number);
                         ++wordOffset;
+                        if(trueLine<=PRINT_COUNT && wordNumber+wordOffset<=PRINT_COUNT)
+                            printOffsets[trueLine+1] += number.size()+1;
                         digitCount += number.size();
                         number = "";
                         if(wordOffset==this->sliceSize || ch=='\n') { ++charCount; break; }
@@ -81,6 +86,7 @@ bool Matrix::blockify(vector<int> &offsets){
             bufferManager.writePage(this->matrixName, lineOffset, wordOffset, pageVector, currPageId);
         }
     }
+    for(int i=1; i<PRINT_COUNT; ++i) this->printOffsets[i]+=this->printOffsets[i-1];
     for(int i=1; i<this->writeOffsets.size(); ++i) this->writeOffsets[i]+=this->writeOffsets[i-1];
     file.close();
     return 0;
@@ -99,53 +105,52 @@ void Matrix::makePermanent(){
 }
 
 bool Matrix::isPermanent(){
-return false;
+    return false;
 }
 
 void Matrix::unload(){
 }
 
-// SUBSTITUTIONS :: 
-//     GENERAL                EXPORT                          SUBSTITUTION
-// horizontalSlices = this->horizontalSliceCount || ceil((float)PRINT_SIZE/sliceSize);
-// verticalSlices   = this->verticalSliceCount   || ceil((float)BLOCK_SIZE/sliceSize);
-// rowsToPrint      = this->rowCount             || rowsToPrint;
-// colsToPrint      = currentPage.columnCount    || colsToPrint;
-
 void Matrix::exportMatrix(int rowsToPrint, int colsToPrint, string salt){
     logger.log("Matrix::exportMatrix");
 
-    vector<uint> tempOffsets = this->writeOffsets;
+    int effectiveVerticalSliceCount = ceil((float)rowsToPrint/this->sliceSize);
+    int effectiveHorizontalSliceCount = ceil((float)colsToPrint/this->sliceSize); 
+
+    vector<uint> tempOffsets;
+    if(salt=="") tempOffsets = this->writeOffsets;
+    else tempOffsets = this->printOffsets;
+    
     string destName = "./data/exports/" + salt + this->matrixName + ".csv";
     ofstream outputFile(destName, std::ios::binary | std::ios::out);
 
-    for(int i=0; i<this->verticalSliceCount; ++i){
+    for(int i=0; i<effectiveVerticalSliceCount; ++i){
         int lineNumber = i*this->sliceSize;
-        for(int j=0; j<this->horizontalSliceCount; ++j){
+        for(int j=0; j<effectiveHorizontalSliceCount; ++j){
             int wordNumber = j*this->sliceSize; 
             int lineOffset, wordOffset;
 
             Page *currentPage;
             bufferManager.getPage(*this, this->getPageId(i,j), currentPage);
-            for(lineOffset=0; lineNumber+lineOffset<this->rowCount && lineOffset<this->sliceSize; ++lineOffset){
+            cout << currentPage << endl;
+            for(auto itr: tempOffsets) cout << itr << " "; cout << endl;
+            for(lineOffset=0; lineNumber+lineOffset<rowsToPrint && lineOffset<this->sliceSize; ++lineOffset){
                 int trueLine = lineNumber+lineOffset;
                 
                 string injectedRow = "";
                 for(wordOffset=0; wordOffset+wordNumber<colsToPrint && wordOffset<this->sliceSize; ++wordOffset)
                     injectedRow += to_string(currentPage->rows[lineOffset][wordOffset])+',';
 
-                if(j==this->horizontalSliceCount-1){
+                if(j==effectiveHorizontalSliceCount-1){
                     injectedRow.pop_back();
                     injectedRow+='\n';
                 }
-                logger.log("injectedRow:: " + injectedRow);
 
                 outputFile.seekp(tempOffsets[trueLine]);
                 outputFile.write(injectedRow.c_str(), injectedRow.size());
                 tempOffsets[trueLine] += injectedRow.size();
             }
         }
-        logger.log("HERE");
     }
     outputFile.close();
 }

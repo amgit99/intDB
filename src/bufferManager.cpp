@@ -22,12 +22,14 @@ Page BufferManager::getPage(string tableName, int pageIndex){
 }
 
 void BufferManager::getPage(Matrix &matrix, int pageIndex, Page* &hook){
-    logger.log("BufferManager(matrix)::getPage");
+    logger.log("BufferManager(matrix)::getPage::END");
     string pageName = "./data/temp/" + matrix.matrixName + "_Page" + to_string(pageIndex);
     if (this->inPool(pageName))
         this->getFromPool(matrix, hook);
     else
         this->insertIntoPool(matrix, pageIndex, hook);
+    // cout << "HOOK AT getPage:: " << hook << endl;
+    logger.log("BufferManager(matrix)::getPage::END");
 }
 
 /**
@@ -62,9 +64,13 @@ Page BufferManager::getFromPool(string pageName){
 }
 void BufferManager::getFromPool(Matrix &matrix, Page* &hook){
     logger.log("BufferManager(matrix)::getFromPool::START");
-    for (auto page : this->pages)
-        if (matrix.matrixName == page.pageName)
+    for (auto page : this->pages){
+        // cout << "HOOKs AT getFromPool::" << &page << endl;
+        if (matrix.matrixName == page.pageName){
             hook = &page;
+        }
+    }
+    // cout << "HOOK AT getFromPool:: " << hook << endl;
     logger.log("BufferManager(matrix)::getFromPool::END");
 }
 
@@ -92,6 +98,7 @@ void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
     pages.push_back(*hook);
+    // cout << "HOOK AT insertIntoPool::" << &pages.back() << endl;
     logger.log("BufferManager(matrix)::insertIntoPool::STRAT");
 }
 
