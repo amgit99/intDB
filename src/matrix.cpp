@@ -88,11 +88,11 @@ bool Matrix::blockify(vector<int> &offsets){
 
 void Matrix::print(){
     logger.log("Matrix::print");
-    this->exportMatrix(min(this->rowCount, PRINT_COUNT), min(this->columnCount, PRINT_COUNT));
-    string command = "cat "+this->sourceFileName;
+    this->exportMatrix(min(this->rowCount, PRINT_COUNT), min(this->columnCount, PRINT_COUNT), "TEMP");
+    string command = "cat ./data/exports/TEMP"+this->matrixName + ".csv";
     system(command.c_str());
-    // string yeetTempFile = "rm -f ./data/" + this->matrixName + ".csv";
-    // system(yeetTempFile.c_str());
+    command = "rm -f ./data/exports/TEMP" + this->matrixName + ".csv";
+    system(command.c_str());
 }
 
 void Matrix::makePermanent(){
@@ -112,10 +112,11 @@ void Matrix::unload(){
 // rowsToPrint      = this->rowCount             || rowsToPrint;
 // colsToPrint      = currentPage.columnCount    || colsToPrint;
 
-void Matrix::exportMatrix(int rowsToPrint, int colsToPrint){
+void Matrix::exportMatrix(int rowsToPrint, int colsToPrint, string salt){
     logger.log("Matrix::exportMatrix");
 
-    string destName = "./data/" + this->matrixName + ".csv";
+    vector<uint> tempOffsets = this->writeOffsets;
+    string destName = "./data/exports/" + salt + this->matrixName + ".csv";
     ofstream outputFile(destName, std::ios::binary | std::ios::out);
 
     for(int i=0; i<this->verticalSliceCount; ++i){
@@ -124,10 +125,8 @@ void Matrix::exportMatrix(int rowsToPrint, int colsToPrint){
             int wordNumber = j*this->sliceSize; 
             int lineOffset, wordOffset;
 
-            logger.log("Matrix::exportMatrix 1");
             Page *currentPage;
             bufferManager.getPage(*this, this->getPageId(i,j), currentPage);
-            logger.log("Matrix::exportMatrix 2");
             for(lineOffset=0; lineNumber+lineOffset<this->rowCount && lineOffset<this->sliceSize; ++lineOffset){
                 int trueLine = lineNumber+lineOffset;
                 
@@ -139,14 +138,14 @@ void Matrix::exportMatrix(int rowsToPrint, int colsToPrint){
                     injectedRow.pop_back();
                     injectedRow+='\n';
                 }
-                // logger.log("injectedRow:: " + injectedRow);
+                logger.log("injectedRow:: " + injectedRow);
 
-                outputFile.seekp(this->writeOffsets[trueLine]);
+                outputFile.seekp(tempOffsets[trueLine]);
                 outputFile.write(injectedRow.c_str(), injectedRow.size());
-                this->writeOffsets[trueLine] += injectedRow.size();
+                tempOffsets[trueLine] += injectedRow.size();
             }
-            logger.log("Matrix::exportMatrix 3");
         }
+        logger.log("HERE");
     }
     outputFile.close();
 }

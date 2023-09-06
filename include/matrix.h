@@ -34,7 +34,7 @@ public:
     void makePermanent();
     bool isPermanent();
     void unload();
-    void exportMatrix(int rowsToPrint, int colsToPrint);
+    void exportMatrix(int rowsToPrint, int colsToPrint, string salt = "");
     int getPageId(int x, int y);
     pair<int,int> getGridDimentions(int pageId);
     void transpose();

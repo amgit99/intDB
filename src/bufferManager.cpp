@@ -61,10 +61,11 @@ Page BufferManager::getFromPool(string pageName){
             return page;
 }
 void BufferManager::getFromPool(Matrix &matrix, Page* &hook){
-    logger.log("BufferManager(matrix)::getFromPool");
+    logger.log("BufferManager(matrix)::getFromPool::START");
     for (auto page : this->pages)
         if (matrix.matrixName == page.pageName)
             hook = &page;
+    logger.log("BufferManager(matrix)::getFromPool::END");
 }
 
 /**
@@ -86,11 +87,12 @@ Page BufferManager::insertIntoPool(string tableName, int pageIndex){
 }
 
 void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
-    logger.log("BufferManager(matrix)::insertIntoPool");
+    logger.log("BufferManager(matrix)::insertIntoPool::STRAT");
     hook = new Page(matrix, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
     pages.push_back(*hook);
+    logger.log("BufferManager(matrix)::insertIntoPool::STRAT");
 }
 
 /**
