@@ -20,16 +20,27 @@ bool semanticParseLOADMATRIX(){
         cout << "SEMANTIC ERROR: Matrix already exists" << endl;
         return false;
     }
+    if (!isMatExists(parsedQuery.loadMatrixName)){
+        cout << "SEMANTIC ERROR: Data file doesn't exist" << endl;
+        return false;
+    }
     return true;
 }
 
 void executeLOADMATRIX(){
     logger.log("executeLOADMATRIX");
+    resetBlockStats();
 
     Matrix *matrix = new Matrix(parsedQuery.loadMatrixName);
     if(matrix->load()){
         matrixCatalogue.insertMatrix(matrix);
         cout << "Loaded Matrix of Order: " << matrix->rowCount << endl;
+        cout << "Total block count: " << matrix->blockCount << endl;
+        printBlockStats();
     }
+    else{
+        cout << "Failed to load Matrix" << endl;
+    }
+    resetBlockStats();
     return;
 }

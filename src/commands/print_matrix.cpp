@@ -28,7 +28,12 @@ bool semanticParsePRINTMATRIX(){
 
 void executePRINTMATRIX(){
     logger.log("executePRINTMATRIX");
+    resetBlockStats();
     Matrix *matrix = matrixCatalogue.getMatrix(parsedQuery.printMatrixName);
     matrix->print();
+    cout << endl;
+    cout << "Total block count: " << matrix->blockCount << endl;    
+    printBlockStats();
+    resetBlockStats();
     return;
 }

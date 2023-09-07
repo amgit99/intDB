@@ -7,7 +7,7 @@ bool syntacticParse(){
     if (tokenizedQuery.size() < 2){
         cout << "SYNTAX ERROR" << endl;
         return false;
-    } 
+    }
 
     if (possibleQueryType == "CLEAR")
         return syntacticParseCLEAR();
@@ -41,11 +41,13 @@ bool syntacticParse(){
     }
     else if(possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
-    else if(possibleQueryType == "TRANSPOSE")
+    else if(possibleQueryType == "TRANSPOSE"){
         if(tokenizedQuery[1] == "MATRIX")
             return syntacticParseTRANSPOSEMATRIX();
-    else if(possibleQueryType == "CHECKSYMMETRY")
+    }
+    else if(possibleQueryType == "CHECKSYMMETRY"){
         return syntacticParseCHECKSYMMETRY();
+    }
     else if(possibleQueryType == "COMPUTE")
         return syntacticParseCOMPUTE();
     else{

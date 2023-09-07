@@ -6,6 +6,12 @@ using namespace std;
 float BLOCK_SIZE = 1;
 uint BLOCK_COUNT = 2;
 uint PRINT_COUNT = 20;
+
+// stats
+uint BLOCKS_READ = 0;
+uint BLOCKS_WRITTEN = 0;
+
+
 string command;
 Logger logger;
 vector<string> tokenizedQuery;
@@ -14,6 +20,17 @@ TableCatalogue tableCatalogue;
 MatrixCatalogue matrixCatalogue;
 BufferManager bufferManager;
 bool __SOURCE = 0;
+
+void resetBlockStats(){
+    BLOCKS_READ = 0;
+    BLOCKS_WRITTEN = 0;
+}
+
+void printBlockStats(){
+    cout << "Number of blocks read: " << BLOCKS_READ << endl;
+    cout << "Number of blocks written: " << BLOCKS_WRITTEN << endl;
+    cout << "Number of blocks accessed: " << BLOCKS_READ+BLOCKS_WRITTEN << endl;
+}
 
 void doCommand(){
     logger.log("doCommand");

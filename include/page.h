@@ -12,10 +12,10 @@
  */
 
 class Page{
+public:
     string tableName;
     string pageIndex;
 
-public:
     int columnCount;
     int rowCount;
     vector<vector<int>> rows;

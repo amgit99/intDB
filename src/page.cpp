@@ -56,7 +56,7 @@ Page::Page(Matrix &matrix, int pageIndex){
     logger.log("Page (matrix)::Page");
     this->tableName = matrix.matrixName;
     this->pageIndex = pageIndex;
-    this->pageName = "./data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
+    this->pageName = "./data/temp/" + this->tableName + "/_Page" + to_string(pageIndex);
     vector<int> row(matrix.sliceSize, 0);
     this->rows.assign(matrix.sliceSize, row);
     ifstream fin(pageName, ios::in);
@@ -87,7 +87,7 @@ Page::Page(string matrixName, int rowCount, int colCount, vector<vector<int>>& d
     this->rowCount = rowCount;
     this->columnCount = colCount;
     this->pageIndex = pageIndex;
-    this->pageName = "./data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
+    this->pageName = "./data/temp/" + this->tableName + "/_Page" + to_string(pageIndex);
     this->rows = data;
 }
 

@@ -26,8 +26,12 @@ bool semanticParseCHECKSYMMETRY(){
 
 void executeCHECKSYMMETRY(){
     logger.log("executeCHECKSYMMETRY");
+    resetBlockStats();
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.checkSymmetryName);
-    if(matrix->isSymmetric()) cout << "HAI BHAI" << endl;
-    else cout << "NAHI HAI BHAI" << endl;
+    if(matrix->isSymmetric()) cout << "SYMMETRIC" << endl;
+    else cout << "ASYMMETRIC" << endl;
+    cout << "Total block count: " << matrix->blockCount << endl;
+    printBlockStats();
+    resetBlockStats();
     return;
 }

@@ -41,4 +41,5 @@ public:
     void transpose();
     bool isSymmetric();
     void compute();
+    void rename(string newName);
 };

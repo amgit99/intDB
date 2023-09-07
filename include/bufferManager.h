@@ -21,15 +21,15 @@
  *
  */
 class BufferManager{
+public:
 
     deque<Page> pages; 
     bool inPool(string pageName);
     Page getFromPool(string pageName);
-    void getFromPool(Matrix &matrix, Page* &hook);
+    void getFromPool(string pageName, Page* &hook);
     Page insertIntoPool(string tableName, int pageIndex);
     void insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook);
 
-    public:
     
     BufferManager();
     Page getPage(string tableName, int pageIndex);

@@ -6,7 +6,7 @@
  */
 
 bool syntacticParseTRANSPOSEMATRIX(){
-    logger.log("syntacticParseEXPORTMATRIX");
+    logger.log("syntacticParseTRANSPOSEMATRIX");
     if (tokenizedQuery.size() != 3){
         cout << "SYNTAX ERROR" << endl;
         return false;
@@ -26,7 +26,11 @@ bool semanticParseTRANSPOSEMATRIX(){
 
 void executeTRANSPOSEMATRIX(){
     logger.log("executeTRANSPOSEMATRIX");
+    resetBlockStats();
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.transposeMatrixName);
     matrix->transpose();
+    cout << "Total block count: " << matrix->blockCount << endl;    
+    printBlockStats();
+    resetBlockStats();
     return;
 }

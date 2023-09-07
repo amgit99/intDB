@@ -4,6 +4,8 @@ Matrix::Matrix(){
 }
 
 Matrix::Matrix(string matrixName){
+    string command = "mkdir ./data/temp/" + matrixName;
+    system(command.c_str());
     this->sourceFileName = "./data/" + matrixName + ".csv";
     this->matrixName = matrixName;
 }
@@ -132,8 +134,6 @@ void Matrix::exportMatrix(int rowsToPrint, int colsToPrint, string salt){
 
             Page *currentPage;
             bufferManager.getPage(*this, this->getPageId(i,j), currentPage);
-            cout << currentPage << endl;
-            for(auto itr: tempOffsets) cout << itr << " "; cout << endl;
             for(lineOffset=0; lineNumber+lineOffset<rowsToPrint && lineOffset<this->sliceSize; ++lineOffset){
                 int trueLine = lineNumber+lineOffset;
                 
@@ -163,60 +163,171 @@ pair<int,int> Matrix::getGridDimentions(int pageId){
     return {pageId/this->columnCount, pageId%this->columnCount};
 }
 
-void Matrix::transpose(){   
+
+void Matrix::transpose(){
     Page *A, *B;
 
+    vector<uint> newWriteOffsets(this->rowCount+1, 0), newPrintOffsets(min(this->rowCount, PRINT_COUNT)+1, 0);
+    newWriteOffsets[0] = newPrintOffsets[0] = 0;
+
+    logger.log("Matrix::transpose");
     for(int i=0; i<this->verticalSliceCount; ++i){
         for(int j=0; j<=i; ++j){
             bufferManager.getPage(*this, this->getPageId(i, j), A);
-            bufferManager.getPage(*this, this->getPageId(j, i), B);
+            if(i != j) bufferManager.getPage(*this, this->getPageId(j, i), B);
+            else B=A;
 
-            for(int ii=0; ii<A->rowCount; ++ii)
-                for(int jj=0; jj<A->columnCount; ++jj)
-                    swap(A->rows[ii][jj], B->rows[jj][ii]);
-            
+            for(int ii=0; ii<A->rowCount; ++ii){
+                for(int jj=0; jj<A->columnCount; ++jj){
+                    if(i==j){
+                        if(ii<jj) swap(A->rows[ii][jj], B->rows[jj][ii]);
+                    }
+                    else swap(A->rows[ii][jj], B->rows[jj][ii]);
+
+                    if(i==j){
+                        if(jj<ii){
+                            newWriteOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                            newWriteOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            if(i*this->sliceSize+ii < PRINT_COUNT){
+                                newPrintOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                                newPrintOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            }
+                        }
+                        else if(ii==jj){
+                            newWriteOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            if(j*this->sliceSize+jj < PRINT_COUNT){
+                                newPrintOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            }
+                        }
+                    }
+                    else {
+                        newWriteOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                        newWriteOffsets[j*this->sliceSize+jj+1] += to_string(B->rows[jj][ii]).size()+1;
+                        if(i*this->sliceSize+ii < PRINT_COUNT){
+                            newPrintOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                            newPrintOffsets[j*this->sliceSize+jj+1] += to_string(B->rows[jj][ii]).size()+1;
+                        }
+                    }
+                }
+            }
             bufferManager.writePage(this->matrixName, A->rowCount, A->columnCount, A->rows, this->getPageId(i, j));
-            bufferManager.writePage(this->matrixName, B->rowCount, B->columnCount, B->rows, this->getPageId(j, i));
+            if(i != j) bufferManager.writePage(this->matrixName, B->rowCount, B->columnCount, B->rows, this->getPageId(j, i));
         }
     }
+    this->writeOffsets = newWriteOffsets;
+    this->printOffsets = newPrintOffsets;
+    for(int i=1; i<writeOffsets.size(); ++i) this->writeOffsets[i] += this->writeOffsets[i-1];
+    for(int i=1; i<printOffsets.size(); ++i) this->printOffsets[i] += this->printOffsets[i-1];
 }
 
-bool Matrix::isSymmetric(){   
+bool Matrix::isSymmetric(){
     Page *A, *B;
 
-    for(int i=0; i<this->verticalSliceCount; ++i){
-        for(int j=0; j<=i; ++j){
+    logger.log("Matrix::isSymmetric");
+    for (int i = 0; i < this->verticalSliceCount; ++i){
+        for (int j = 0; j <= i; ++j){
             bufferManager.getPage(*this, this->getPageId(i, j), A);
-            bufferManager.getPage(*this, this->getPageId(j, i), B);
+            if (i != j)
+                bufferManager.getPage(*this, this->getPageId(j, i), B);
+            else
+                B = A;
 
-            for(int ii=0; ii<A->rowCount; ++ii)
-                for(int jj=0; jj<A->columnCount; ++jj)
-                    if(A->rows[ii][jj] != B->rows[jj][ii])
-                        return 0;
-            
+            for (int ii = 0; ii < A->rowCount; ++ii){
+                for (int jj = 0; jj < A->columnCount; ++jj){
+                    if (A->rows[ii][jj] != B->rows[jj][ii]){
+                        // cout << ii << "  " << jj << endl;
+                        return false;
+                    }
+                }
+            }
         }
     }
     return true;
 }
 
-void Matrix::compute(){   
+void Matrix::compute(){
     Page *A, *B;
     int temp;
 
-    for(int i=0; i<this->verticalSliceCount; ++i){
-        for(int j=0; j<=i; ++j){
-            bufferManager.getPage(*this, this->getPageId(i, j), A);
-            bufferManager.getPage(*this, this->getPageId(j, i), B);
+    logger.log("Matrix::compute");
+    vector<uint> newWriteOffsets(this->rowCount+1, 0), newPrintOffsets(min(this->rowCount, PRINT_COUNT)+1, 0);
+    newWriteOffsets[0] = newPrintOffsets[0] = 0;
 
-            for(int ii=0; ii<A->rowCount; ++ii)
-                for(int jj=0; jj<A->columnCount; ++jj){
-                    temp = A->rows[ii][jj];
-                    A->rows[ii][jj] = A->rows[ii][jj] - B->rows[jj][ii];
-                    B->rows[jj][ii] = B->rows[jj][ii] - temp;
+    for (int i = 0; i < this->verticalSliceCount; ++i){
+        for (int j = 0; j <= i; ++j){
+            bufferManager.getPage(*this, this->getPageId(i, j), A);
+            if (i != j)
+                bufferManager.getPage(*this, this->getPageId(j, i), B);
+            else
+                B = A;
+
+            for (int ii = 0; ii < A->rowCount; ++ii){
+                for (int jj = 0; jj < A->columnCount; ++jj){
+
+                    if(i==j){
+                        if(ii<jj) {
+                            temp = A->rows[ii][jj];
+                            A->rows[ii][jj] -= B->rows[jj][ii];
+                            B->rows[jj][ii] -= temp;
+                        }
+                        else if(ii==jj) A->rows[ii][jj] = 0;
+                    }
+                    else{
+                        temp = A->rows[ii][jj];
+                        A->rows[ii][jj] = A->rows[ii][jj] - B->rows[jj][ii];
+                        B->rows[jj][ii] = B->rows[jj][ii] - temp;
+                    }
+
+                    if(i==j){
+                        if(jj<ii){
+                            newWriteOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                            newWriteOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            if(i*this->sliceSize+ii < PRINT_COUNT){
+                                newPrintOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                                newPrintOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            }
+                        }
+                        else if(ii==jj){
+                            newWriteOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            if(j*this->sliceSize+jj < PRINT_COUNT){
+                                newPrintOffsets[j*this->sliceSize+jj+1] += to_string(A->rows[jj][ii]).size()+1;
+                            }
+                        }
+                    }
+                    else {
+                        newWriteOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                        newWriteOffsets[j*this->sliceSize+jj+1] += to_string(B->rows[jj][ii]).size()+1;
+                        if(i*this->sliceSize+ii < PRINT_COUNT){
+                            newPrintOffsets[i*this->sliceSize+ii+1] += to_string(A->rows[ii][jj]).size()+1;
+                            newPrintOffsets[j*this->sliceSize+jj+1] += to_string(B->rows[jj][ii]).size()+1;
+                        }
+                    }
                 }
-            
+            }
             bufferManager.writePage(this->matrixName, A->rowCount, A->columnCount, A->rows, this->getPageId(i, j));
-            bufferManager.writePage(this->matrixName, B->rowCount, B->columnCount, B->rows, this->getPageId(j, i));
+            if(i != j) bufferManager.writePage(this->matrixName, B->rowCount, B->columnCount, B->rows, this->getPageId(j, i));
         }
     }
+    this->writeOffsets = newWriteOffsets;
+    this->printOffsets = newPrintOffsets;
+    for(int i=1; i<writeOffsets.size(); ++i) this->writeOffsets[i] += this->writeOffsets[i-1];
+    for(int i=1; i<printOffsets.size(); ++i) this->printOffsets[i] += this->printOffsets[i-1];
+}
+
+void Matrix::rename(string newName){
+    logger.log("Matrix::rename");
+    /// catalogue 
+    matrixCatalogue.matrices.erase(this->matrixName);
+    matrixCatalogue.matrices[newName] = this;
+    /// command 
+    string command = "mv ./data/temp/" + this->matrixName + " ./data/temp/" + newName;
+    system(command.c_str());
+    /// change map
+    for(auto &itr: bufferManager.pages){
+        string path = "./data/temp/" + this->matrixName + "/_Page" + itr.pageIndex;
+        if(itr.pageName == path) 
+            itr.pageName = "./data/temp/" + newName + "/_Page" + itr.pageIndex;
+    }
+    /// rename mat object
+    this->matrixName = newName;
 }

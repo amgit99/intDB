@@ -26,7 +26,11 @@ bool semanticParseEXPORTMATRIX(){
 
 void executeEXPORTMATRIX(){
     logger.log("executeEXPORTMATRIX");
+    resetBlockStats();
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.exportMatrixName);
     matrix->exportMatrix(matrix->rowCount, matrix->columnCount);
+    cout << "Matrix exported." << endl;
+    printBlockStats();
+    resetBlockStats();
     return;
 }

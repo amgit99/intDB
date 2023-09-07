@@ -22,14 +22,13 @@ Page BufferManager::getPage(string tableName, int pageIndex){
 }
 
 void BufferManager::getPage(Matrix &matrix, int pageIndex, Page* &hook){
-    logger.log("BufferManager(matrix)::getPage::END");
-    string pageName = "./data/temp/" + matrix.matrixName + "_Page" + to_string(pageIndex);
+    logger.log("BufferManager(matrix)::getPage");
+    string pageName = "./data/temp/" + matrix.matrixName + "/_Page" + to_string(pageIndex);
     if (this->inPool(pageName))
-        this->getFromPool(matrix, hook);
-    else
+        this->getFromPool(pageName, hook);
+    else{
         this->insertIntoPool(matrix, pageIndex, hook);
-    // cout << "HOOK AT getPage:: " << hook << endl;
-    logger.log("BufferManager(matrix)::getPage::END");
+    }
 }
 
 /**
@@ -42,8 +41,9 @@ void BufferManager::getPage(Matrix &matrix, int pageIndex, Page* &hook){
 bool BufferManager::inPool(string pageName){
     logger.log("BufferManager::inPool");
     for (auto page : this->pages){
-        if (pageName == page.pageName)
+        if (pageName == page.pageName){
             return true;
+        }
     }
     return false;
 }
@@ -62,16 +62,15 @@ Page BufferManager::getFromPool(string pageName){
         if (pageName == page.pageName)
             return page;
 }
-void BufferManager::getFromPool(Matrix &matrix, Page* &hook){
-    logger.log("BufferManager(matrix)::getFromPool::START");
-    for (auto page : this->pages){
-        // cout << "HOOKs AT getFromPool::" << &page << endl;
-        if (matrix.matrixName == page.pageName){
+void BufferManager::getFromPool(string pageName, Page* &hook){
+    logger.log("BufferManager(matrix)::getFromPool");
+    for (auto& page : this->pages){
+        if (pageName == page.pageName){
             hook = &page;
+            return;
         }
     }
-    // cout << "HOOK AT getFromPool:: " << hook << endl;
-    logger.log("BufferManager(matrix)::getFromPool::END");
+    logger.log("BufferManager(matrix)::getFromPool: Not found in pool");
 }
 
 /**
@@ -92,15 +91,26 @@ Page BufferManager::insertIntoPool(string tableName, int pageIndex){
     return page;
 }
 
+// void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
+//     logger.log("BufferManager(matrix)::insertIntoPool");
+//     hook = new Page(matrix, pageIndex);
+//     if (this->pages.size() >= BLOCK_COUNT)  
+//         pages.pop_front();
+//     pages.push_back(*hook);
+// }
+
+
 void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
-    logger.log("BufferManager(matrix)::insertIntoPool::STRAT");
-    hook = new Page(matrix, pageIndex);
+    logger.log("BufferManager(matrix)::insertIntoPool");
+    Page* tempPage = new Page(matrix, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
-    pages.push_back(*hook);
-    // cout << "HOOK AT insertIntoPool::" << &pages.back() << endl;
-    logger.log("BufferManager(matrix)::insertIntoPool::STRAT");
+    pages.push_back(*tempPage);
+    BLOCKS_READ++;
+    hook = &pages.back();
+    delete tempPage;
 }
+
 
 /**
  * @brief The buffer manager is also responsible for writing pages. This is
@@ -129,7 +139,7 @@ void BufferManager::writePage(string matrixName, int rowCount, int colCount, vec
     logger.log("BufferManager::writePage");
     Page page(matrixName, rowCount, colCount, data, pageIndex);
     page.writePage();
-    // BLOCKS_WRITTEN++;
+    BLOCKS_WRITTEN++;
 }
 
 /**
