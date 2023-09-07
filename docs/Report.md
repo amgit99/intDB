@@ -15,6 +15,10 @@
 | 2022201056     | Neeraj Asdev     | neeraj.asdev@students.iiit.ac.in     |
 
 
+
+**NOTE**: Some $\LaTeX$ symbols are failing to render on GitHub Markdown preview. Use [HackMD](https://hackmd.io/?nav=overview) to view this Markdown file.
+
+
 ## INTRODUCTION
 Here we are extending the features of the existing *__SimpleRA__* RDBMS by implementing and adding the commands dealing with **MATRICES**.
 
@@ -143,12 +147,12 @@ The number of $Z$ symbols on each line in the csv file must be equal. -->
             $$
             swap(A[i][j], A[j][i])
             $$
-* We use the `bufferManager` to get the pages associated with the current slice indexes.
-* After the transpose operation is complete, the updated data is written back to the pages using the `bufferManager`. The outer section ensures that all slices of the matrix are transposed, and the inner section ensures the actual swapping happens between the elements in the right slices of the matrix.
+* We use the `BufferManager` to get the pages associated with the current slice indexes.
+* After the transpose operation is complete, the updated data is written back to the pages using the `BufferManager`. The outer section ensures that all slices of the matrix are transposed, and the inner section ensures the actual swapping happens between the elements in the right slices of the matrix.
 
 ### `CHECKSYMMETRY`
 * The sections and base implementation are same as the transpose operation but note that here we don't need to actually implement transpose, just use the transpose conditions to check the symmetry of the matrix.
-* It also uses the `bufferManager` to get the pages associated with the current slice indexes. It then iterates through the rows and columns of one page and compares the values with the corresponding positions in other page. 
+* It also uses the `BufferManager` to get the pages associated with the current slice indexes. It then iterates through the rows and columns of one page and compares the values with the corresponding positions in other page. 
 * If any pair of values doesn't match, it immediately returns `false`, indicating that the matrix is _asymmetric_.
 * If all the corresponding slice pairs are matched completely, then the function returns `true`, indicating that the matrix is _symmetric_.
 
@@ -159,7 +163,7 @@ The number of $Z$ symbols on each line in the csv file must be equal. -->
     * `EXPORT` is required because the `TRANSPOSE MATRIX` command replaces the original matrix with its transpose (inplace).
     * We DON'T need to implement the transpose separately, we just need to apply subtraction on elements of the one sided triangular matrix with the elements of the other sided triangular matrix and vice versa. The diagonal elements would be 0 in this case.
 * Similar to the above `TRANSPOSE` and `CHECKSYMMETRY` operations the code does the following for each pair of pages with slice indices <$s_i$, $s_j$> and <$s_j$, $s_i$> inside the outer section:
-    * It uses the `bufferManager` to get the pages (say) A and B associated with the current slice indexes.
+    * It uses the `BufferManager` to get the pages (say) A and B associated with the current slice indexes.
     * It then iterates through the rows and columns of A and B, performing the following computation for each element:
         $$
             \begin{align}
@@ -169,7 +173,7 @@ The number of $Z$ symbols on each line in the csv file must be equal. -->
             \end{align}
         $$
             
-    * After the computation is complete for the current pair of pages, it writes the updated data back to the pages using the `bufferManager`
+    * After the computation is complete for the current pair of pages, it writes the updated data back to the pages using the `BufferManager`
 * The flow for `COMPUTE` is as follows considering $A$ is the name of the matrix for whom `COMPUTE` is being calculated:
 $$
 \text{Export Matrix $A$}\\
@@ -196,5 +200,14 @@ $$
 <img src="https://miro.medium.com/v2/resize:fit:1400/1*uGY5dJ9wl2siXkE3YbH6MQ.jpeg" alt="“Premature optimization is the root of all evil”" width="700">
 
 
+## CONTRIBUTION
+
+
+
+| Roll No        | Name             | Work                                 |
+| -------------- | ---------------- | ------------------------------------ |
+| 2022201006     | Jaffrey Joy      | `COMPUTE`, `RENAME`, `Page` and `BufferManager` modifications, Report   |
+| 2022201013     | Amit Marathe     | `LOAD`, `EXPORT`, `PRINT`, `Page` and `BufferManager` modifications   |
+| 2022201056     | Neeraj Asdev     | `TRANSPOSE`, `CHECKSYMMETRY`, Command parsing,  Report   |
 
 
