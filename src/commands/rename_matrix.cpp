@@ -23,6 +23,10 @@ bool semanticParseRENAMEMATRIX(){
         cout << "SEMANTIC ERROR: Matrix doesn't exist" << endl;
         return false;
     }
+    if (matrixCatalogue.isMatrix(parsedQuery.renameMatrixName)){
+        cout << "SEMANTIC ERROR: Matrix of this name already exists" << endl;
+        return false;
+    }
     return true;
 }
 

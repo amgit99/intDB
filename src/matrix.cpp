@@ -31,16 +31,14 @@ bool Matrix::load(){
     this->blockCount = horizontalSliceCount*verticalSliceCount;
 
     fi.close();
-
     this->blockify(offsets);
-
     return true;
 }
 
 bool Matrix::blockify(vector<int> &offsets){
     logger.log("Matrix::blockify"); 
     this->writeOffsets.resize(this->rowCount+1, this->columnCount);
-    this->printOffsets.resize(PRINT_COUNT+1, 0);
+    this->printOffsets.resize(min(this->columnCount, PRINT_COUNT)+1, 0);
     this->writeOffsets[0] = 0;
     this->printOffsets[0] = 0;
     this->rowsPerBlockCount.resize(this->blockCount, 0);
@@ -66,13 +64,13 @@ bool Matrix::blockify(vector<int> &offsets){
 
                 char ch; string number = "";
                 int charCount = 0, digitCount = 0;
-                while (file.get(ch)) {
+                while (file.get(ch)){
                     if(ch==',' || ch=='\n'){
                         pageVector[lineOffset][wordOffset] = stoi(number);
                         ++wordOffset;
                         if(trueLine<=PRINT_COUNT && wordNumber+wordOffset<=PRINT_COUNT)
                             printOffsets[trueLine+1] += number.size()+1;
-                        digitCount += number.size();
+                        digitCount += number.length();
                         number = "";
                         if(wordOffset==this->sliceSize || ch=='\n') { ++charCount; break; }
                     }
@@ -88,7 +86,7 @@ bool Matrix::blockify(vector<int> &offsets){
             bufferManager.writePage(this->matrixName, lineOffset, wordOffset, pageVector, currPageId);
         }
     }
-    for(int i=1; i<PRINT_COUNT; ++i) this->printOffsets[i]+=this->printOffsets[i-1];
+    for(int i=1; i<this->printOffsets.size(); ++i) this->printOffsets[i]+=this->printOffsets[i-1];
     for(int i=1; i<this->writeOffsets.size(); ++i) this->writeOffsets[i]+=this->writeOffsets[i-1];
     file.close();
     return 0;
@@ -120,11 +118,13 @@ void Matrix::exportMatrix(int rowsToPrint, int colsToPrint, string salt){
     int effectiveHorizontalSliceCount = ceil((float)colsToPrint/this->sliceSize); 
 
     vector<uint> tempOffsets;
-    if(salt=="") tempOffsets = this->writeOffsets;
-    else tempOffsets = this->printOffsets;
+
+    if(salt=="TEMP") tempOffsets = this->printOffsets;
+    else tempOffsets = this->writeOffsets;
     
     string destName = "./data/exports/" + salt + this->matrixName + ".csv";
-    ofstream outputFile(destName, std::ios::binary | std::ios::out);
+
+    ofstream outputFile(destName);
 
     for(int i=0; i<effectiveVerticalSliceCount; ++i){
         int lineNumber = i*this->sliceSize;
@@ -235,7 +235,6 @@ bool Matrix::isSymmetric(){
             for (int ii = 0; ii < A->rowCount; ++ii){
                 for (int jj = 0; jj < A->columnCount; ++jj){
                     if (A->rows[ii][jj] != B->rows[jj][ii]){
-                        // cout << ii << "  " << jj << endl;
                         return false;
                     }
                 }

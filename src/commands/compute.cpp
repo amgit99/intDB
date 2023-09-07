@@ -36,7 +36,7 @@ void executeCOMPUTE(){
     // NOTE: "A" is placeholder used in the comments below that refers to the original matrix name
 
     // Export current matrix
-    string salt = "temp_";
+    string salt = "OG_";
     string exportDest = "./data/exports/" + salt + originalMatrixName + ".csv";
     matrix->exportMatrix(matrix->rowCount, matrix->columnCount, salt);
 
@@ -48,10 +48,10 @@ void executeCOMPUTE(){
 
     // Load the previously exported (original) matrix i. e. A
     Matrix *orig_matrix = new Matrix(salt + originalMatrixName);
+
     orig_matrix->sourceFileName = exportDest;
-    cout << originalSourceFileName << endl;
-    cout << exportDest << endl;
     if(orig_matrix->load()){
+        cout << "Load Successful" << endl;
         matrixCatalogue.insertMatrix(orig_matrix);
     }
     else{

@@ -30,6 +30,7 @@ void executeEXPORTMATRIX(){
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.exportMatrixName);
     matrix->exportMatrix(matrix->rowCount, matrix->columnCount);
     cout << "Matrix exported." << endl;
+    cout << "Total block count: " << matrix->blockCount << endl;
     printBlockStats();
     resetBlockStats();
     return;
