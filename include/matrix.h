@@ -2,6 +2,9 @@
 #include<bits/stdc++.h>
 #include<sys/stat.h> 
 #include<fstream>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 using namespace std;
 /**
@@ -29,8 +32,10 @@ public:
 
     Matrix();
     Matrix(string matrixName);
+    // bool load();
+    // bool blockify(vector<int> &offsets);
     bool load();
-    bool blockify(vector<int> &offsets);
+    bool blockify(char *fileData, int fileLength);
     void print();
     void makePermanent();
     bool isPermanent();

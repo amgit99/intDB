@@ -1,4 +1,6 @@
 *.o
+*.py
+TEST*.*
 log
 server
 data/temp/**
