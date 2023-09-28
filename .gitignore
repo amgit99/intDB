@@ -5,6 +5,7 @@ log
 server
 data/temp/**
 data/exports/**
+docs/todo.md
 settings.json
 .vscode/**
 .github/**

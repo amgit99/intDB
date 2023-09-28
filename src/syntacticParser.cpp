@@ -13,43 +13,54 @@ bool syntacticParse(){
         return syntacticParseCLEAR();
     else if (possibleQueryType == "INDEX")
         return syntacticParseINDEX();
-    else if (possibleQueryType == "LIST")
-        return syntacticParseLIST();
+    else if (possibleQueryType == "LIST");
+        // return syntacticParseLIST();
     else if (possibleQueryType == "LOAD"){
         if(tokenizedQuery[1] == "MATRIX" && tokenizedQuery.size() > 2){
-            return syntacticParseLOADMATRIX();
+            // return syntacticParseLOADMATRIX();
+            return 0;
         }
         return syntacticParseLOAD();
     }
     else if (possibleQueryType == "PRINT"){
         if(tokenizedQuery[1] == "MATRIX"){
-            return syntacticParsePRINTMATRIX();
+            // return syntacticParsePRINTMATRIX();
+            return 0;
         }
-        return syntacticParsePRINT();
+        // return syntacticParsePRINT();
     }
     else if (possibleQueryType == "RENAME"){
         if(tokenizedQuery[1] == "MATRIX"){
-            return syntacticParseRENAMEMATRIX();
+            // return syntacticParseRENAMEMATRIX();
+            return 0;
         }
-        return syntacticParseRENAME();
+        // return syntacticParseRENAME();
     }
     else if(possibleQueryType == "EXPORT"){
         if(tokenizedQuery[1] == "MATRIX"){
-            return syntacticParseEXPORTMATRIX();
+            // return syntacticParseEXPORTMATRIX();
+            return 0;
         }
         return syntacticParseEXPORT();
     }
-    else if(possibleQueryType == "SOURCE")
-        return syntacticParseSOURCE();
+    else if(possibleQueryType == "SOURCE"){
+        // return syntacticParseSOURCE();
+        return 0;
+    }
     else if(possibleQueryType == "TRANSPOSE"){
-        if(tokenizedQuery[1] == "MATRIX")
-            return syntacticParseTRANSPOSEMATRIX();
+        if(tokenizedQuery[1] == "MATRIX"){
+            // return syntacticParseTRANSPOSEMATRIX();
+            return 0;
+        }
     }
     else if(possibleQueryType == "CHECKSYMMETRY"){
-        return syntacticParseCHECKSYMMETRY();
+        // return syntacticParseCHECKSYMMETRY();
+        return 0;
     }
-    else if(possibleQueryType == "COMPUTE")
-        return syntacticParseCOMPUTE();
+    else if(possibleQueryType == "COMPUTE"){
+        // return syntacticParseCOMPUTE();
+        return 0;
+    }
     else{
         string resultantRelationName = possibleQueryType;
         if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3){
@@ -132,39 +143,4 @@ void ParsedQuery::clear(){
     this->sortRelationName = "";
 
     this->sourceFileName = "";
-}
-
-/**
- * @brief Checks to see if source file exists. Called when LOAD command is
- * invoked.
- *
- * @param tableName 
- * @return true 
- * @return false 
- */
-bool isFileExists(string tableName){
-    string fileName = "./data/" + tableName + ".csv";
-    struct stat buffer;
-    return (stat(fileName.c_str(), &buffer) == 0);
-}
-
-bool isMatExists(string matrixName){
-    string fileName = "./data/" + matrixName + ".csv";
-    struct stat buffer;
-    return (stat(fileName.c_str(), &buffer) == 0);
-}
-
-
-/**
- * @brief Checks to see if source file exists. Called when SOURCE command is
- * invoked.
- *
- * @param tableName 
- * @return true 
- * @return false 
- */
-bool isQueryFile(string fileName){
-    fileName = "./data/" + fileName + ".ra";
-    struct stat buffer;
-    return (stat(fileName.c_str(), &buffer) == 0);
 }

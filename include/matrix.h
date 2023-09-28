@@ -1,7 +1,7 @@
-#include<iostream>
-#include<bits/stdc++.h>
-#include<sys/stat.h> 
-#include<fstream>
+#include <iostream>
+#include <bits/stdc++.h>
+#include <sys/stat.h> 
+#include <fstream>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -32,10 +32,10 @@ public:
 
     Matrix();
     Matrix(string matrixName);
-    // bool load();
-    // bool blockify(vector<int> &offsets);
     bool load();
-    bool blockify(char *fileData, int fileLength);
+    bool blockify(vector<int> &offsets);
+    // bool load();
+    // bool blockify(char *fileData, int fileLength);
     void print();
     void makePermanent();
     bool isPermanent();

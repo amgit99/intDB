@@ -1,35 +1,39 @@
 #include "global.h"
+extern FILE *yyin;
 /**
  * @brief 
  * SYNTAX: SOURCE filename
  */
-bool syntacticParseSOURCE(){
-    logger.log("syntacticParseSOURCE");
-    if (tokenizedQuery.size() != 2){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = SOURCE;
-    parsedQuery.sourceFileName = tokenizedQuery[1];
-    return true;
-}
+// bool syntacticParseSOURCE(){
+//     logger.log("syntacticParseSOURCE");
+//     if (tokenizedQuery.size() != 2){
+//         cout << "SYNTAX ERROR" << endl;
+//         return false;
+//     }
+//     parsedQuery.queryType = SOURCE;
+//     parsedQuery.sourceFileName = tokenizedQuery[1];
+//     return true;
+// }
 
-bool semanticParseSOURCE(){
+bool semanticParseSOURCE(char* fileName){
+    string file = fileName;
     logger.log("semanticParseSOURCE");
-    if (!isQueryFile(parsedQuery.sourceFileName)){
+    if (!isQueryFile(file)){
         cout << "SEMANTIC ERROR: File doesn't exist" << endl;
         return false;
     }
     return true;
 }
 
-void executeSOURCE(){
+void executeSOURCE(char* fileName){
+    string _, file = fileName;
     logger.log("executeSOURCE");
-    string path = "./data/"+parsedQuery.sourceFileName+".ra";
+    string path = "./data/" + file + ".ra";
     logger.log(path);
 
-    __SOURCE = 1;
-    ifstream inputFile(path);
-    while (getline(inputFile, command)) process_input();
-    __SOURCE = 0;
+    FILE *input_file = fopen(path.c_str(), "r");
+    yyin = input_file;
+    __EOF__ = 0;
+    while(!__EOF__) yyparse();
+    fclose(input_file);
 }

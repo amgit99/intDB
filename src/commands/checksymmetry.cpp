@@ -5,29 +5,31 @@
  * SYNTAX: CHECKSYMMETRY A
  */
 
-bool syntacticParseCHECKSYMMETRY(){
-    logger.log("syntacticParseCHECKSYMMETRY");
-    if (tokenizedQuery.size() != 2){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = CHECKSYMMETRY;
-    parsedQuery.checkSymmetryName = tokenizedQuery[1];
-    return true;
-}
+// bool syntacticParseCHECKSYMMETRY(){
+//     logger.log("syntacticParseCHECKSYMMETRY");
+//     if (tokenizedQuery.size() != 2){
+//         cout << "SYNTAX ERROR" << endl;
+//         return false;
+//     }
+//     parsedQuery.queryType = CHECKSYMMETRY;
+//     parsedQuery.checkSymmetryName = tokenizedQuery[1];
+//     return true;
+// }
 
-bool semanticParseCHECKSYMMETRY(){
+bool semanticParseCHECKSYMMETRY(char* matrixName){
+    string mat = matrixName;
     logger.log("semanticParseCHECKSYMMETRY");
-    if (matrixCatalogue.isMatrix(parsedQuery.checkSymmetryName))
+    if (matrixCatalogue.isMatrix(mat))
         return true;
     cout << "SEMANTIC ERROR: No such matrix exists" << endl;
     return false;
 }
 
-void executeCHECKSYMMETRY(){
+void executeCHECKSYMMETRY(char* matrixName){
+    string mat = matrixName;
     logger.log("executeCHECKSYMMETRY");
     resetBlockStats();
-    Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.checkSymmetryName);
+    Matrix* matrix = matrixCatalogue.getMatrix(mat);
     if(matrix->isSymmetric()) cout << "SYMMETRIC" << endl;
     else cout << "ASYMMETRIC" << endl;
     cout << "Total block count: " << matrix->blockCount << endl;

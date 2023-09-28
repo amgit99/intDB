@@ -21,6 +21,8 @@ non_assignment_statement -> clear_statement
                            | quit_statement
                            | rename_statement
                            | source_statement
+                           | compute_statement
+                           | transpose_statement
 
 cross_product_statement -> CROSS relation_name relation_name
 
@@ -53,12 +55,19 @@ indexing_strategy -> HASH | BTREE | NOTHING;
 list_statement -> LIST TABLES;
 
 load_statement -> LOAD relation_name
+                | LOAD MATRIX matrix_name
 
 print_statement -> PRINT relation_name
+                 | PRINT MATRIX matrix_name
+
+compute_statement -> COMPUTE matrix_name
+
+transpose_statement -> TRANSPOSE matrix_name
 
 quit_statement -> QUIT
 
 rename_statement -> RENAME column_name TO column_name FROM relation_name
+                  | RENAME MATRIX current_matrix_name new_matrix_name
 
 source_statement -> SOURCE file_name
 
