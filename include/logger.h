@@ -1,4 +1,5 @@
-#include "timer.h"
+#pragma once
+#include "base.h"
 
 using namespace std;
 

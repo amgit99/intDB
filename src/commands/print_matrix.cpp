@@ -1,4 +1,5 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
 /**
  * @brief 
  * SYNTAX: PRINT MATRIX A

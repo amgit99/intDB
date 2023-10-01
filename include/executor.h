@@ -1,3 +1,4 @@
+#pragma once
 #include"semanticParser.h"
 
 void executeCommand();
@@ -9,7 +10,7 @@ void executeEXPORT();
 void executeINDEX();
 void executeJOIN();
 void executeLIST();
-void executeLOAD();
+void executeLOAD(char* _tableName);
 void executePRINT(char* _tableName);
 void executePROJECTION();
 void executeRENAME(char* _oldCol, char* _newCol, char* _tableName);
@@ -24,5 +25,5 @@ void executeEXPORTMATRIX(char* matrixName);
 void executeCHECKSYMMETRY(char* matrixName);
 void executeCOMPUTE(char* matrixName);
 
-bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
+// bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 void printRowCount(int rowCount);

@@ -1,18 +1,8 @@
-#include "global.h"
+#include "globals.h"
 /**
  * @brief 
  * SYNTAX: PRINT relation_name
  */
-// bool syntacticParsePRINT(){
-//     logger.log("syntacticParsePRINT");
-//     if (tokenizedQuery.size() != 2){
-//         cout << "SYNTAX ERROR" << endl;
-//         return false;
-//     }
-//     parsedQuery.queryType = PRINT;
-//     parsedQuery.printRelationName = tokenizedQuery[1];
-//     return true;
-// }
 
 bool semanticParsePRINT(char* _tableName){
     string tableName = _tableName;

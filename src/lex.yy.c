@@ -543,7 +543,7 @@ char *yytext;
 #line 1 "./src/lexer.l"
 #line 2 "./src/lexer.l"
 #include "parser.tab.h"
-#include "global.h"
+#include "globals.h"
 #line 547 "lex.yy.c"
 #line 548 "lex.yy.c"
 
@@ -830,232 +830,232 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 8 "./src/lexer.l"
-{ return TOK_ASSIGN_ARROW; }
+{ return ASSIGN_ARROW_; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 9 "./src/lexer.l"
-{ return TOK_CROSS; }
+{ return CROSS_; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 10 "./src/lexer.l"
-{ return TOK_DISTINCT; }
+{ return DISTINCT_; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 11 "./src/lexer.l"
-{ return TOK_JOIN; }
+{ return JOIN_; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 12 "./src/lexer.l"
-{ return TOK_PROJECT; }
+{ return PROJECT_; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 13 "./src/lexer.l"
-{ return TOK_SELECT; }
+{ return SELECT_; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 14 "./src/lexer.l"
-{ return TOK_SORT; }
+{ return SORT_; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 15 "./src/lexer.l"
-{ return TOK_CLEAR; }
+{ return CLEAR_; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 16 "./src/lexer.l"
-{ return TOK_INDEX; }
+{ return INDEX_; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 17 "./src/lexer.l"
-{ return TOK_LIST; }
+{ return LIST_; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 18 "./src/lexer.l"
-{ return TOK_LOAD; }
+{ return LOAD_; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 19 "./src/lexer.l"
-{ return TOK_EXPORT; }
+{ return EXPORT_; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 20 "./src/lexer.l"
-{ return TOK_PRINT; }
+{ return PRINT_; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 21 "./src/lexer.l"
-{ return TOK_COMPUTE; }
+{ return COMPUTE_; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 22 "./src/lexer.l"
-{ return TOK_CHECKSYMMETRY; }
+{ return CHECKSYMMETRY_; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 23 "./src/lexer.l"
-{ return TOK_TRANSPOSE; }
+{ return TRANSPOSE_; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 24 "./src/lexer.l"
-{ return TOK_QUIT; }
+{ return QUIT_; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 25 "./src/lexer.l"
-{ return TOK_RENAME; }
+{ return RENAME_; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 26 "./src/lexer.l"
-{ return TOK_SOURCE; }
+{ return SOURCE_; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 27 "./src/lexer.l"
-{ return TOK_MATRIX; }
+{ return MATRIX_; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 28 "./src/lexer.l"
-{ return TOK_GT; }
+{ return GT_; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 29 "./src/lexer.l"
-{ return TOK_LT; }
+{ return LT_; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 30 "./src/lexer.l"
-{ return TOK_EQ; }
+{ return EQ_; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 31 "./src/lexer.l"
-{ return TOK_NEQ; }
+{ return NEQ_; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 32 "./src/lexer.l"
-{ return TOK_LTEQ; }
+{ return LTEQ_; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 33 "./src/lexer.l"
-{ return TOK_GTEQ; }
+{ return GTEQ_; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 34 "./src/lexer.l"
-{ return TOK_EQGT; }
+{ return EQGT_; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 35 "./src/lexer.l"
-{ return TOK_EQLT; }
+{ return EQLT_; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 36 "./src/lexer.l"
-{ return TOK_ASC; }
+{ yylval.boolval = 0; return BOOL_LITERAL_; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 37 "./src/lexer.l"
-{ return TOK_DESC; }
+{ yylval.boolval = 1; return BOOL_LITERAL_; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 38 "./src/lexer.l"
-{ return TOK_HASH; }
+{ return HASH_; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 39 "./src/lexer.l"
-{ return TOK_BTREE; }
+{ return BTREE_; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 40 "./src/lexer.l"
-{ return TOK_NOTHING; }
+{ return NOTHING_; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 41 "./src/lexer.l"
-{ return TOK_COMMA; }
+{ return COMMA_; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 42 "./src/lexer.l"
-{ return TOK_ON; }
+{ return ON_; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 43 "./src/lexer.l"
-{ return TOK_FROM; }
+{ return FROM_; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 44 "./src/lexer.l"
-{ return TOK_TO; }
+{ return TO_; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 45 "./src/lexer.l"
-{ return TOK_USING; }
+{ return USING_; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 46 "./src/lexer.l"
-{ return TOK_TABLES; }
+{ return TABLES_; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 47 "./src/lexer.l"
-{ return TOK_BY; }
+{ return BY_; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 48 "./src/lexer.l"
-{ return TOK_IN; }
+{ return IN_; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 49 "./src/lexer.l"
-{ return TOK_AND; }
+{ return AND_; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 50 "./src/lexer.l"
-{ return TOK_OR; }
+{ return OR_; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 51 "./src/lexer.l"
-{ return TOK_NOT; }
+{ return NOT_; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 52 "./src/lexer.l"
-{ yylval.strval = strdup(yytext); return TOK_IDENTIFIER; }
+{ yylval.strval = strdup(yytext); return IDENTIFIER_; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 53 "./src/lexer.l"
-{ yylval.intval = atoi(yytext); return TOK_INT_LITERAL; }
+{ yylval.intval = atoi(yytext); return INT_LITERAL_; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP

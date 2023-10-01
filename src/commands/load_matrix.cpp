@@ -1,4 +1,6 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
+#include "semanticParser.h"
 /**
  * @brief 
  * SYNTAX: LOAD MATRIX A

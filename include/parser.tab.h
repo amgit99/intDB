@@ -39,116 +39,117 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     TOK_ASSIGN_ARROW = 258,
-     TOK_CROSS = 259,
-     TOK_DISTINCT = 260,
-     TOK_JOIN = 261,
-     TOK_PROJECT = 262,
-     TOK_SELECT = 263,
-     TOK_SORT = 264,
-     TOK_CLEAR = 265,
-     TOK_INDEX = 266,
-     TOK_LIST = 267,
-     TOK_LOAD = 268,
-     TOK_PRINT = 269,
-     TOK_COMPUTE = 270,
-     TOK_TRANSPOSE = 271,
-     TOK_QUIT = 272,
-     TOK_RENAME = 273,
-     TOK_SOURCE = 274,
-     TOK_IDENTIFIER = 275,
-     TOK_INT_LITERAL = 276,
-     TOK_GT = 277,
-     TOK_LT = 278,
-     TOK_EQ = 279,
-     TOK_NEQ = 280,
-     TOK_LTEQ = 281,
-     TOK_GTEQ = 282,
-     TOK_EQGT = 283,
-     TOK_EQLT = 284,
-     TOK_MATRIX = 285,
-     TOK_EOL = 286,
-     TOK_EXPORT = 287,
-     TOK_CHECKSYMMETRY = 288,
-     TOK_ASC = 289,
-     TOK_DESC = 290,
-     TOK_HASH = 291,
-     TOK_BTREE = 292,
-     TOK_NOTHING = 293,
-     TOK_COMMA = 294,
-     TOK_ON = 295,
-     TOK_FROM = 296,
-     TOK_TO = 297,
-     TOK_USING = 298,
-     TOK_TABLES = 299,
-     TOK_BY = 300,
-     TOK_IN = 301,
-     TOK_AND = 302,
-     TOK_OR = 303,
-     TOK_NOT = 304
+     ASSIGN_ARROW_ = 258,
+     CROSS_ = 259,
+     DISTINCT_ = 260,
+     JOIN_ = 261,
+     PROJECT_ = 262,
+     SELECT_ = 263,
+     SORT_ = 264,
+     CLEAR_ = 265,
+     INDEX_ = 266,
+     LIST_ = 267,
+     LOAD_ = 268,
+     EXPORT_ = 269,
+     PRINT_ = 270,
+     COMPUTE_ = 271,
+     CHECKSYMMETRY_ = 272,
+     TRANSPOSE_ = 273,
+     QUIT_ = 274,
+     RENAME_ = 275,
+     SOURCE_ = 276,
+     MATRIX_ = 277,
+     GT_ = 278,
+     LT_ = 279,
+     EQ_ = 280,
+     NEQ_ = 281,
+     LTEQ_ = 282,
+     GTEQ_ = 283,
+     EQGT_ = 284,
+     EQLT_ = 285,
+     ASC_ = 286,
+     DESC_ = 287,
+     HASH_ = 288,
+     BTREE_ = 289,
+     NOTHING_ = 290,
+     COMMA_ = 291,
+     ON_ = 292,
+     FROM_ = 293,
+     TO_ = 294,
+     USING_ = 295,
+     TABLES_ = 296,
+     BY_ = 297,
+     IN_ = 298,
+     AND_ = 299,
+     OR_ = 300,
+     NOT_ = 301,
+     IDENTIFIER_ = 302,
+     INT_LITERAL_ = 303,
+     BOOL_LITERAL_ = 304
    };
 #endif
 /* Tokens.  */
-#define TOK_ASSIGN_ARROW 258
-#define TOK_CROSS 259
-#define TOK_DISTINCT 260
-#define TOK_JOIN 261
-#define TOK_PROJECT 262
-#define TOK_SELECT 263
-#define TOK_SORT 264
-#define TOK_CLEAR 265
-#define TOK_INDEX 266
-#define TOK_LIST 267
-#define TOK_LOAD 268
-#define TOK_PRINT 269
-#define TOK_COMPUTE 270
-#define TOK_TRANSPOSE 271
-#define TOK_QUIT 272
-#define TOK_RENAME 273
-#define TOK_SOURCE 274
-#define TOK_IDENTIFIER 275
-#define TOK_INT_LITERAL 276
-#define TOK_GT 277
-#define TOK_LT 278
-#define TOK_EQ 279
-#define TOK_NEQ 280
-#define TOK_LTEQ 281
-#define TOK_GTEQ 282
-#define TOK_EQGT 283
-#define TOK_EQLT 284
-#define TOK_MATRIX 285
-#define TOK_EOL 286
-#define TOK_EXPORT 287
-#define TOK_CHECKSYMMETRY 288
-#define TOK_ASC 289
-#define TOK_DESC 290
-#define TOK_HASH 291
-#define TOK_BTREE 292
-#define TOK_NOTHING 293
-#define TOK_COMMA 294
-#define TOK_ON 295
-#define TOK_FROM 296
-#define TOK_TO 297
-#define TOK_USING 298
-#define TOK_TABLES 299
-#define TOK_BY 300
-#define TOK_IN 301
-#define TOK_AND 302
-#define TOK_OR 303
-#define TOK_NOT 304
+#define ASSIGN_ARROW_ 258
+#define CROSS_ 259
+#define DISTINCT_ 260
+#define JOIN_ 261
+#define PROJECT_ 262
+#define SELECT_ 263
+#define SORT_ 264
+#define CLEAR_ 265
+#define INDEX_ 266
+#define LIST_ 267
+#define LOAD_ 268
+#define EXPORT_ 269
+#define PRINT_ 270
+#define COMPUTE_ 271
+#define CHECKSYMMETRY_ 272
+#define TRANSPOSE_ 273
+#define QUIT_ 274
+#define RENAME_ 275
+#define SOURCE_ 276
+#define MATRIX_ 277
+#define GT_ 278
+#define LT_ 279
+#define EQ_ 280
+#define NEQ_ 281
+#define LTEQ_ 282
+#define GTEQ_ 283
+#define EQGT_ 284
+#define EQLT_ 285
+#define ASC_ 286
+#define DESC_ 287
+#define HASH_ 288
+#define BTREE_ 289
+#define NOTHING_ 290
+#define COMMA_ 291
+#define ON_ 292
+#define FROM_ 293
+#define TO_ 294
+#define USING_ 295
+#define TABLES_ 296
+#define BY_ 297
+#define IN_ 298
+#define AND_ 299
+#define OR_ 300
+#define NOT_ 301
+#define IDENTIFIER_ 302
+#define INT_LITERAL_ 303
+#define BOOL_LITERAL_ 304
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 8 "./src/parser.y"
+#line 12 "./src/parser.y"
 {
-    int intval;
+    int intval, argc_;
     char* strval;
+    bool boolval;
 }
 /* Line 1529 of yacc.c.  */
-#line 152 "parser.tab.h"
+#line 153 "parser.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

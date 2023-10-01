@@ -13,7 +13,7 @@ assignment_statement -> cross_product_statement
                       | selection_statement
                       | sort_statement
                        
-non_assignment_statement -> clear_statement 
+non_assignment_statement ->  clear_statement 
                            | index_statement
                            | list_statement
                            | load_statement

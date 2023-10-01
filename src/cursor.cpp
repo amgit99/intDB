@@ -1,4 +1,5 @@
-#include "global.h"
+#include "cursor.h"
+#include "globals.h"
 
 Cursor::Cursor(string tableName, int pageIndex){
     logger.log("Cursor::Cursor");

@@ -1,4 +1,5 @@
-#include "global.h"
+#pragma once
+#include "globals.h"
 
 BufferManager::BufferManager(){
     logger.log("BufferManager::BufferManager");

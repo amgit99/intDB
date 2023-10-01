@@ -1,4 +1,4 @@
-#include "global.h"
+#include "timer.h"
 
 void Timer::lap(){
     splits.push_back(std::chrono::high_resolution_clock::now());

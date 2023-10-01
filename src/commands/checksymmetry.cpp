@@ -1,20 +1,11 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
+
 
 /**
  * @brief 
  * SYNTAX: CHECKSYMMETRY A
  */
-
-// bool syntacticParseCHECKSYMMETRY(){
-//     logger.log("syntacticParseCHECKSYMMETRY");
-//     if (tokenizedQuery.size() != 2){
-//         cout << "SYNTAX ERROR" << endl;
-//         return false;
-//     }
-//     parsedQuery.queryType = CHECKSYMMETRY;
-//     parsedQuery.checkSymmetryName = tokenizedQuery[1];
-//     return true;
-// }
 
 bool semanticParseCHECKSYMMETRY(char* matrixName){
     string mat = matrixName;

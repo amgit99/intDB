@@ -1,19 +1,10 @@
-#include "global.h"
+#include "globals.h"
+#include "semanticParser.h"
 extern FILE *yyin;
 /**
  * @brief 
  * SYNTAX: SOURCE filename
  */
-// bool syntacticParseSOURCE(){
-//     logger.log("syntacticParseSOURCE");
-//     if (tokenizedQuery.size() != 2){
-//         cout << "SYNTAX ERROR" << endl;
-//         return false;
-//     }
-//     parsedQuery.queryType = SOURCE;
-//     parsedQuery.sourceFileName = tokenizedQuery[1];
-//     return true;
-// }
 
 bool semanticParseSOURCE(char* fileName){
     string file = fileName;

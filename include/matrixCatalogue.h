@@ -1,3 +1,4 @@
+#pragma once
 #include "tableCatalogue.h"
 /**
  * @brief The MatrixCatalogue acts like an index of matrices existing in the

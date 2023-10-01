@@ -1,20 +1,10 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
 
 /**
  * @brief 
  * SYNTAX: EXPORT MATRIX A
  */
-
-// bool syntacticParseEXPORTMATRIX(){
-//     logger.log("syntacticParseEXPORTMATRIX");
-//     if (tokenizedQuery.size() != 3){
-//         cout << "SYNTAX ERROR" << endl;
-//         return false;
-//     }
-//     parsedQuery.queryType = EXPORT_MATRIX;
-//     parsedQuery.exportMatrixName = tokenizedQuery[2];
-//     return true;
-// }
 
 bool semanticParseEXPORTMATRIX(char* matrixName){
     string mat = matrixName;

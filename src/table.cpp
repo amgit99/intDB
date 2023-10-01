@@ -1,4 +1,5 @@
-#include "global.h"
+#include "table.h"
+#include "globals.h"
 
 /**
  * @brief Construct a new Table:: Table object
@@ -209,7 +210,7 @@ void Table::print(){
         row = cursor.getNext();
         this->writeRow(row, cout);
     }
-    printRowCount(this->rowCount);
+    cout << "\n\nRow Count: " << this->rowCount << endl;
 }
 
 

@@ -44,10 +44,10 @@ clean:
 	rm -rf data/exports/*
 	mkdir ./obj/commands
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE_DIR)/global.h
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE_DIR)/globals.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 	
-$(COMMAND_OBJ_DIR)/%.o: $(COMMANDS_DIR)/.cpp $(INCLUDE_DIR)/global.h
+$(COMMAND_OBJ_DIR)/%.o: $(COMMANDS_DIR)/.cpp $(INCLUDE_DIR)/globals.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(PARSER_OBJS): $(LEXER_SRC) $(PARSER_SRC) 

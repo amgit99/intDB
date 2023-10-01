@@ -1,4 +1,4 @@
-#include "global.h"
+#include "globals.h"
 
 void TableCatalogue::insertTable(Table* table){
     logger.log("TableCatalogue::~insertTable"); 
@@ -41,7 +41,7 @@ void TableCatalogue::print(){
         cout << rel.first << endl;
         rowCount++;
     }
-    printRowCount(rowCount);
+    cout << "\n\nRow Count: " << rowCount << endl;
 }
 
 TableCatalogue::~TableCatalogue(){

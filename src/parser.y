@@ -1,142 +1,227 @@
 %{
-#include "global.h"
+
+#include "globals.h"
+#include "semanticParser.h"
+#include "executor.h"
 
 int yylex();
 void yyerror(const char* s);
+
 %}
 
 %union {
-    int intval;
+    int intval, argc_;
     char* strval;
+    bool boolval;
 }
 
-%token TOK_ASSIGN_ARROW TOK_CROSS TOK_DISTINCT TOK_JOIN TOK_PROJECT TOK_SELECT TOK_SORT TOK_CLEAR TOK_INDEX
-%token TOK_LIST TOK_LOAD TOK_PRINT TOK_COMPUTE TOK_TRANSPOSE TOK_QUIT TOK_RENAME TOK_SOURCE TOK_IDENTIFIER TOK_INT_LITERAL
-%token TOK_GT TOK_LT TOK_EQ TOK_NEQ TOK_LTEQ TOK_GTEQ TOK_EQGT TOK_EQLT TOK_MATRIX TOK_EOL TOK_EXPORT TOK_CHECKSYMMETRY
-%token TOK_ASC TOK_DESC TOK_HASH TOK_BTREE TOK_NOTHING TOK_COMMA TOK_ON TOK_FROM TOK_TO TOK_USING TOK_TABLES TOK_BY TOK_IN TOK_AND TOK_OR TOK_NOT
+%token ASSIGN_ARROW_
+%token CROSS_
+%token DISTINCT_
+%token JOIN_
+%token PROJECT_
+%token SELECT_
+%token SORT_
+%token CLEAR_
+%token INDEX_
+%token LIST_
+%token LOAD_
+%token EXPORT_
+%token PRINT_
+%token COMPUTE_
+%token CHECKSYMMETRY_
+%token TRANSPOSE_
+%token QUIT_
+%token RENAME_
+%token SOURCE_
+%token MATRIX_
+%token GT_
+%token LT_
+%token EQ_
+%token NEQ_
+%token LTEQ_
+%token GTEQ_
+%token EQGT_
+%token EQLT_
+%token ASC_
+%token DESC_
+%token HASH_
+%token BTREE_
+%token NOTHING_
+%token COMMA_
+%token ON_
+%token FROM_
+%token TO_
+%token USING_
+%token TABLES_
+%token BY_
+%token IN_
+%token AND_
+%token OR_
+%token NOT_
+%token IDENTIFIER_
+%token INT_LITERAL_
+%token BOOL_LITERAL_
 
-%type <strval> TOK_IDENTIFIER
-%type <intval> TOK_INT_LITERAL
+%type <strval> IDENTIFIER_
+%type <intval> INT_LITERAL_
+%type <boolval> BOOL_LITERAL_
 
 %%
 
 Statement:
-    | RelationAssign
-    | NonAssignmentStatement
-    ;
+         | assignment_statement
+         | non_assignment_statement  { return 0; }
+         ;
 
-RelationAssign:
-      TOK_IDENTIFIER TOK_ASSIGN_ARROW AssignmentStatement
-    ;
+assignment_statement: IDENTIFIER_ ASSIGN_ARROW_ relation { cout << "final assign" << endl; return 0; }
+                    ;
 
-AssignmentStatement:
-      CrossProductStatement
-    | TOK_DISTINCT TOK_IDENTIFIER
-    | JoinStatement
-    | ProjectionStatement
-    | SelectionStatement
-    | SortStatement
-    ;
+relation: cross_product_statement { cout << "cross_product_statement" << endl; }
+        | distinct_statement
+        | join_statement
+        | projection_statement
+        | selection_statement
+        | IDENTIFIER_ { cout << $1 << endl; }
+        ;
 
-NonAssignmentStatement:
-      TOK_CLEAR TOK_IDENTIFIER
+non_assignment_statement: clear_statement 
+                        | index_statement
+                        | list_statement
+                        | load_statement
+                        | print_statement
+                        | sort_statement
+                              {
+                                cout << "sort complete" << endl;
+                              }
+                        | QUIT_
+                              { 
+                                exit(0); 
+                              }
+                        | rename_statement
+                        | SOURCE_ IDENTIFIER_
+                              { 
+                                if(semanticParseSOURCE($2)) 
+                                    executeSOURCE($2); 
+                              }
+                        | COMPUTE_ IDENTIFIER_
+                              { 
+                                if(semanticParseCOMPUTE($2)) 
+                                    executeCOMPUTE($2); 
+                              }
+                        | CHECKSYMMETRY_ IDENTIFIER_
+                              { 
+                                if(semanticParseCHECKSYMMETRY($2)) 
+                                    executeCHECKSYMMETRY($2); 
+                              }
+                        | EXPORT_ MATRIX_ IDENTIFIER_
+                              { 
+                                if(semanticParseEXPORTMATRIX($3)) 
+                                    executeEXPORTMATRIX($3); 
+                              }
+                        | TRANSPOSE_ IDENTIFIER_
+                              { 
+                                if(semanticParseTRANSPOSEMATRIX($2)) 
+                                    executeTRANSPOSEMATRIX($2); 
+                              }
+                        ;
 
-    | TOK_INDEX TOK_ON TOK_IDENTIFIER TOK_FROM TOK_IDENTIFIER TOK_USING IndexingStrategy
+cross_product_statement: CROSS_ relation relation { cout << "cross" << endl; }
+                       ;
 
-    | TOK_LIST TOK_TABLES
-              { executeLIST(); return 0; }
+distinct_statement: DISTINCT_ relation
+                  ;
 
-    | TOK_LOAD TOK_IDENTIFIER
+join_statement: JOIN_ relation relation ON_ IDENTIFIER_ binop IDENTIFIER_
+              ;
 
-    | TOK_PRINT TOK_IDENTIFIER
-              { if(semanticParsePRINT($2)) executePRINT($2); return 0; }
+projection_statement: PROJECT_ projection_list FROM_ relation
+                    ;
 
-    | TOK_LOAD TOK_MATRIX TOK_IDENTIFIER  
-              { if(semanticParseLOADMATRIX($3)) executeLOADMATRIX($3); return 0;}
+projection_list: projection_list IDENTIFIER_ 
+               | IDENTIFIER_
+               ;
 
-    | TOK_PRINT TOK_MATRIX TOK_IDENTIFIER
-              { if(semanticParsePRINTMATRIX($3)) executePRINTMATRIX($3); return 0;}
-    
-    | TOK_TRANSPOSE TOK_IDENTIFIER
-              { if(semanticParseTRANSPOSEMATRIX($2)) executeTRANSPOSEMATRIX($2); return 0;}
+selection_statement: SELECT_ condition FROM_ relation
+                   ;
 
-    | TOK_EXPORT TOK_MATRIX TOK_IDENTIFIER
-              { if(semanticParseEXPORTMATRIX($3)) executeEXPORTMATRIX($3); return 0;}
-    
-    | TOK_CHECKSYMMETRY TOK_IDENTIFIER
-              { if(semanticParseCHECKSYMMETRY($2)) executeCHECKSYMMETRY($2); return 0; }
+condition: IDENTIFIER_ binop IDENTIFIER_ 
+         | IDENTIFIER_ binop INT_LITERAL_ 
+         ;
 
-    | TOK_COMPUTE TOK_IDENTIFIER
-              { if(semanticParseCOMPUTE($2)) executeCOMPUTE($2); return 0;}
+binop: GT_
+     | LT_
+     | EQ_
+     | NEQ_ 
+     | LTEQ_
+     | GTEQ_
+     | EQGT_
+     | EQLT_
+     ;
 
-    | TOK_QUIT
-              { exit(0); }
+sort_statement: SORT_ relation BY_ arg_list
+              {
+                cout << "sort statement" << endl;
+              }
 
-    | RenameStatement
+arg_list: IDENTIFIER_ IN_ BOOL_LITERAL_
+              { 
+                cout << $1 << "  " << $3 << endl;
+              }
+        | IDENTIFIER_ arg_list BOOL_LITERAL_
+              { 
+                cout << $1 << "  " << $3 << endl;
+              }
 
-    | TOK_SOURCE TOK_IDENTIFIER
-              { if(semanticParseSOURCE($2)) executeSOURCE($2); return 0;}
-    ;
+clear_statement: CLEAR_ IDENTIFIER_
+               ;
 
-CrossProductStatement:
-      TOK_CROSS TOK_IDENTIFIER TOK_IDENTIFIER
-    ;
+index_statement: INDEX_ ON_ IDENTIFIER_ FROM_ relation USING_ indexing_strategy
+               ;
 
-JoinStatement:
-      TOK_JOIN TOK_IDENTIFIER TOK_COMMA TOK_IDENTIFIER TOK_ON TOK_IDENTIFIER binop TOK_IDENTIFIER
-    ;
+rename_statement: RENAME_ IDENTIFIER_ TO_ IDENTIFIER_ FROM_ IDENTIFIER_
+                          { 
+                            if(semanticParseRENAME($2, $4, $6)) 
+                                executeRENAME($2, $4, $6); 
+                          }
+                | RENAME_ MATRIX_ IDENTIFIER_ IDENTIFIER_
+                          { 
+                            if(semanticParseRENAMEMATRIX($3, $4)) 
+                                executeRENAMEMATRIX($3, $4); 
+                          }
+                ;
 
-ProjectionStatement:
-      TOK_PROJECT ProjectionList TOK_FROM TOK_IDENTIFIER
-    ;
+indexing_strategy: HASH_
+                 | BTREE_
+                 | NOTHING_
+                 ;
 
-ProjectionList:
-      ProjectionList TOK_COMMA TOK_IDENTIFIER
-    | TOK_IDENTIFIER
-    ;
+list_statement: LIST_ TABLES_
+              ;
 
-SelectionStatement:
-      TOK_SELECT Condition TOK_FROM TOK_IDENTIFIER
-    ;
+load_statement: LOAD_ IDENTIFIER_
+                    {
+                      if(semanticParseLOAD($2)) 
+                          executeLOAD($2); 
+                    }
+              | LOAD_ MATRIX_ IDENTIFIER_
+                    { 
+                      if(semanticParseLOADMATRIX($3)) 
+                          executeLOADMATRIX($3); 
+                    }
+              ;
 
-Condition:
-      TOK_IDENTIFIER binop TOK_IDENTIFIER
-    | TOK_IDENTIFIER binop TOK_INT_LITERAL
-    ;
-
-IndexingStrategy:
-      TOK_HASH
-    | TOK_BTREE
-    | TOK_NOTHING
-    ;
-
-SortStatement:
-      TOK_SORT TOK_IDENTIFIER TOK_BY TOK_IDENTIFIER TOK_IN SortingOrder
-    ;
-
-SortingOrder:
-      TOK_ASC
-    | TOK_DESC
-    ;
-
-RenameStatement:
-      TOK_RENAME TOK_IDENTIFIER TOK_TO TOK_IDENTIFIER TOK_FROM TOK_IDENTIFIER
-              { if(semanticParseRENAME($2, $4, $6)) executeRENAME($2, $4, $6); return 0; }
-
-    | TOK_RENAME TOK_MATRIX TOK_IDENTIFIER TOK_IDENTIFIER
-              { if(semanticParseRENAMEMATRIX($3, $4)) executeRENAMEMATRIX($3, $4); return 0;}
-    ;
-
-binop:
-      TOK_GT
-    | TOK_LT
-    | TOK_EQ
-    | TOK_NEQ
-    | TOK_GTEQ
-    | TOK_LTEQ
-    | TOK_EQLT
-    | TOK_EQGT
-
+print_statement: PRINT_ IDENTIFIER_
+                    { 
+                      if(semanticParsePRINT($2)) 
+                          executePRINT($2); 
+                    }
+               | PRINT_ MATRIX_ IDENTIFIER_
+                    { 
+                      if(semanticParsePRINTMATRIX($3)) 
+                          executePRINTMATRIX($3); 
+                    }
+               ;
 %%
 
 void yyerror(const char* s) {

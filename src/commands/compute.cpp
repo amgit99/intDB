@@ -1,20 +1,10 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
 
 /**
  * @brief 
  * SYNTAX: COMPUTE A
  */
-
-// bool syntacticParseCOMPUTE(){
-//     logger.log("syntacticParseCOMPUTE");
-//     if (tokenizedQuery.size() != 2){
-//         cout << "SYNTAX ERROR" << endl;
-//         return false;
-//     }
-//     parsedQuery.queryType = COMPUTE;
-//     parsedQuery.computeName = tokenizedQuery[1];
-//     return true;
-// }
 
 bool semanticParseCOMPUTE(char* matrixName){
     string mat = matrixName;

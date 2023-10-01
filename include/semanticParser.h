@@ -1,4 +1,5 @@
-#include"syntacticParser.h"
+#pragma once
+#include "base.h"
 
 bool semanticParse();
 
@@ -9,7 +10,7 @@ bool semanticParseEXPORT();
 bool semanticParseINDEX();
 bool semanticParseJOIN();
 bool semanticParseLIST();
-bool semanticParseLOAD();
+bool semanticParseLOAD(char* _tableName);
 bool semanticParsePRINT(char* _tableName);
 bool semanticParsePROJECTION();
 bool semanticParseRENAME(char* _oldCol, char* _newCol, char* _tableName);

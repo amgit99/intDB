@@ -1,10 +1,5 @@
-#include <iostream>
-#include <bits/stdc++.h>
-#include <sys/stat.h> 
-#include <fstream>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
+#pragma once
+#include "base.h"
 
 using namespace std;
 /**

@@ -1,4 +1,6 @@
-#include "global.h"
+#include "matrix.h"
+#include "globals.h"
+
 int offsets[10001];
 
 Matrix::Matrix(){

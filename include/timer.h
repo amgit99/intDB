@@ -1,4 +1,5 @@
-#include "matrix.h"
+#pragma once
+#include "base.h"
 
 class Timer{
     vector<std::chrono::high_resolution_clock::time_point> splits;

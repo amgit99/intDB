@@ -1,4 +1,7 @@
-#include "global.h"
+#include "page.h"
+#include "table.h"
+#include "globals.h"
+
 /**
  * @brief Construct a new Page object. Never used as part of the code
  *

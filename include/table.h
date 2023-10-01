@@ -1,4 +1,6 @@
+#pragma once
 #include "cursor.h"
+#include "logger.h"
 
 enum IndexingStrategy{
     BTREE,
@@ -56,6 +58,7 @@ public:
  * @tparam T current usaages include int and string
  * @param row 
  */
+
 template <typename T>
 void writeRow(vector<T> row, ostream &fout){
     logger.log("Table::printRow");
@@ -74,6 +77,7 @@ void writeRow(vector<T> row, ostream &fout){
  * @tparam T current usaages include int and string
  * @param row 
  */
+
 template <typename T>
 void writeRow(vector<T> row){
     logger.log("Table::printRow");
