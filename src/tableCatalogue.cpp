@@ -1,7 +1,7 @@
 #include "globals.h"
 
 void TableCatalogue::insertTable(Table* table){
-    logger.log("TableCatalogue::~insertTable"); 
+    logger.log("TableCatalogue::insertTable"); 
     this->tables[table->tableName] = table;
 }
 void TableCatalogue::deleteTable(string tableName){
@@ -11,9 +11,11 @@ void TableCatalogue::deleteTable(string tableName){
     this->tables.erase(tableName);
 }
 Table* TableCatalogue::getTable(string tableName){
-    logger.log("TableCatalogue::getTable"); 
-    Table *table = this->tables[tableName];
-    return table;
+    logger.log("TableCatalogue::getTable");
+    logger.log(tableName);
+    logger.log(to_string(this->tables.size()));
+    logger.log("TableCatalogue::Left getTable");
+    return this->tables[tableName];
 }
 bool TableCatalogue::isTable(string tableName){
     logger.log("TableCatalogue::isTable"); 

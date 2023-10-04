@@ -1,10 +1,11 @@
 //Server Code
 #include "globals.h"
+#include "sort.h"
 
 using namespace std;
 
 // Parameters
-float BLOCK_SIZE = 10;
+float BLOCK_SIZE = 1;
 uint BLOCK_COUNT = 2;
 uint PRINT_COUNT = 5;
 
@@ -19,6 +20,10 @@ TableCatalogue tableCatalogue;
 MatrixCatalogue matrixCatalogue;
 BufferManager bufferManager;
 bool __EOF__ = 0;
+
+// Query Objects
+stack<string> evaluatedTable;
+Sort sortQuery; 
 
 void resetBlockStats(){
     BLOCKS_READ = 0;

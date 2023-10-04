@@ -172,7 +172,6 @@
 
 
 #include "globals.h"
-#include "semanticParser.h"
 #include "executor.h"
 
 int yylex();
@@ -200,14 +199,14 @@ void yyerror(const char* s);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 12 "./src/parser.y"
+#line 11 "./src/parser.y"
 {
     int intval, argc_;
     char* strval;
     bool boolval;
 }
 /* Line 193 of yacc.c.  */
-#line 211 "parser.tab.c"
+#line 210 "parser.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -220,7 +219,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 224 "parser.tab.c"
+#line 223 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -527,8 +526,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    72,    72,    73,    74,    77,    80,    81,    82,    83,
-      84,    85,    88,    89,    90,    91,    92,    93,    97,   101,
+       0,    71,    71,    72,    73,    76,    79,    80,    81,    82,
+      83,    84,    87,    88,    89,    90,    91,    92,    96,   101,
      102,   107,   112,   117,   122,   129,   132,   135,   138,   141,
      142,   145,   148,   149,   152,   153,   154,   155,   156,   157,
      158,   159,   162,   167,   171,   176,   179,   182,   187,   194,
@@ -1505,36 +1504,37 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 74 "./src/parser.y"
+#line 73 "./src/parser.y"
     { return 0; ;}
     break;
 
   case 5:
-#line 77 "./src/parser.y"
+#line 76 "./src/parser.y"
     { cout << "final assign" << endl; return 0; ;}
     break;
 
   case 6:
-#line 80 "./src/parser.y"
+#line 79 "./src/parser.y"
     { cout << "cross_product_statement" << endl; ;}
     break;
 
   case 11:
-#line 85 "./src/parser.y"
-    { cout << (yyvsp[(1) - (1)].strval) << endl; ;}
+#line 84 "./src/parser.y"
+    { evaluatedTable.push((yyvsp[(1) - (1)].strval)); ;}
     break;
 
   case 17:
-#line 94 "./src/parser.y"
+#line 93 "./src/parser.y"
     {
                                 cout << "sort complete" << endl;
                               ;}
     break;
 
   case 18:
-#line 98 "./src/parser.y"
+#line 97 "./src/parser.y"
     { 
-                                exit(0); 
+                                cout << "matching here" << endl;
+                                return 69; 
                               ;}
     break;
 
@@ -1586,21 +1586,21 @@ yyreduce:
   case 42:
 #line 163 "./src/parser.y"
     {
-                cout << "sort statement" << endl;
+                sortQuery.execute();
               ;}
     break;
 
   case 43:
 #line 168 "./src/parser.y"
     { 
-                cout << (yyvsp[(1) - (3)].strval) << "  " << (yyvsp[(3) - (3)].boolval) << endl;
+                sortQuery.updateArgList((yyvsp[(1) - (3)].strval), (yyvsp[(3) - (3)].boolval));
               ;}
     break;
 
   case 44:
 #line 172 "./src/parser.y"
     { 
-                cout << (yyvsp[(1) - (3)].strval) << "  " << (yyvsp[(3) - (3)].boolval) << endl;
+                sortQuery.updateArgList((yyvsp[(1) - (3)].strval), (yyvsp[(3) - (3)].boolval));
               ;}
     break;
 

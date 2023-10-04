@@ -10,7 +10,7 @@ enum IndexingStrategy{
 
 /**
  * @brief The Table class holds all information related to a loaded table. It
- * also implements methods that interact with the parsers, executors, cursors
+ * also implements methods that interact with the parsers(lol u call that a parser, lmfao), executors, cursors
  * and the buffer manager. There are typically 2 ways a table object gets
  * created through the course of the workflow - the first is by using the LOAD
  * command and the second is to use assignment statements (SELECT, PROJECT,
@@ -50,6 +50,7 @@ public:
     Cursor getCursor();
     int getColumnIndex(string columnName);
     void unload();
+    void sort(vector<string> &sortColumnList, vector<bool> &sortOrderList);
 
     /**
  * @brief Static function that takes a vector of valued and prints them out in a

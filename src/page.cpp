@@ -41,6 +41,7 @@ Page::Page(string tableName, int pageIndex){
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pageIndex];
     int number;
+
     for (uint rowCounter = 0; rowCounter < this->rowCount; rowCounter++){
         for (int columnCounter = 0; columnCounter < columnCount; columnCounter++){
             fin >> number;
@@ -48,6 +49,7 @@ Page::Page(string tableName, int pageIndex){
         }
     }
     fin.close();
+    logger.log("Page::Left Page");
 }
 
 /**
@@ -135,5 +137,6 @@ void Page::writePage(){
         }
         fout << endl;
     }
+    logger.log("LEFT weite page");
     fout.close();
 }

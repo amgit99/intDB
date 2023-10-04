@@ -301,7 +301,11 @@ Cursor Table::getCursor(){
 int Table::getColumnIndex(string columnName){
     logger.log("Table::getColumnIndex");
     for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++){
-        if (this->columns[columnCounter] == columnName)
+        if (this->columns[columnCounter] == columnName){
+            logger.log("Table::Left getColumnIndex");
             return columnCounter;
+        }
     }
+    logger.log("Table::Left getColumnIndex");
+    return -1;
 }

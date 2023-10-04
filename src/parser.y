@@ -1,7 +1,6 @@
 %{
 
 #include "globals.h"
-#include "semanticParser.h"
 #include "executor.h"
 
 int yylex();
@@ -82,7 +81,7 @@ relation: cross_product_statement { cout << "cross_product_statement" << endl; }
         | join_statement
         | projection_statement
         | selection_statement
-        | IDENTIFIER_ { cout << $1 << endl; }
+        | IDENTIFIER_ { evaluatedTable.push($1); }
         ;
 
 non_assignment_statement: clear_statement 
@@ -96,7 +95,8 @@ non_assignment_statement: clear_statement
                               }
                         | QUIT_
                               { 
-                                exit(0); 
+                                cout << "matching here" << endl;
+                                return 69; 
                               }
                         | rename_statement
                         | SOURCE_ IDENTIFIER_
@@ -161,16 +161,16 @@ binop: GT_
 
 sort_statement: SORT_ relation BY_ arg_list
               {
-                cout << "sort statement" << endl;
+                sortQuery.execute();
               }
 
 arg_list: IDENTIFIER_ IN_ BOOL_LITERAL_
               { 
-                cout << $1 << "  " << $3 << endl;
+                sortQuery.updateArgList($1, $3);
               }
         | IDENTIFIER_ arg_list BOOL_LITERAL_
               { 
-                cout << $1 << "  " << $3 << endl;
+                sortQuery.updateArgList($1, $3);
               }
 
 clear_statement: CLEAR_ IDENTIFIER_

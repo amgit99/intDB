@@ -1,4 +1,3 @@
-#pragma once
 #include "globals.h"
 
 BufferManager::BufferManager(){
@@ -16,10 +15,27 @@ BufferManager::BufferManager(){
 Page BufferManager::getPage(string tableName, int pageIndex){
     logger.log("BufferManager::getPage");
     string pageName = "./data/temp/" + tableName + "_Page" + to_string(pageIndex);
-    if (this->inPool(pageName))
+    if (this->inPool(pageName)){
+        logger.log("BufferManager::Left getPage");
         return this->getFromPool(pageName);
-    else
+    }
+    else {
+        logger.log("BufferManager::Left getPage");
         return this->insertIntoPool(tableName, pageIndex);
+    }
+}
+
+void BufferManager::getPage(string tableName, int pageIndex, Page* &hook){
+    logger.log("BufferManager::getPage");
+    string pageName = "./data/temp/" + tableName + "_Page" + to_string(pageIndex);
+    if (this->inPool(pageName)){
+        logger.log("BufferManager::Left getPage");
+        this->getFromPool(pageName, hook);
+    }
+    else {
+        logger.log("BufferManager::Left getPage");
+        this->insertIntoPool(tableName, pageIndex, hook);
+    }
 }
 
 void BufferManager::getPage(Matrix &matrix, int pageIndex, Page* &hook){
@@ -43,9 +59,11 @@ bool BufferManager::inPool(string pageName){
     logger.log("BufferManager::inPool");
     for (auto page : this->pages){
         if (pageName == page.pageName){
+            logger.log("BufferManager::Left inPool");
             return true;
         }
     }
+    logger.log("BufferManager::Left inPool");
     return false;
 }
 
@@ -83,23 +101,26 @@ void BufferManager::getFromPool(string pageName, Page* &hook){
  * @param pageIndex 
  * @return Page 
  */
+void BufferManager::insertIntoPool(string tableName, int pageIndex, Page* &hook){
+    logger.log("BufferManager(table)::insertIntoPool");
+    Page* tempPage = new Page(tableName, pageIndex);
+    if (this->pages.size() >= BLOCK_COUNT)
+        pages.pop_front();
+    pages.push_back(*tempPage);
+    BLOCKS_READ++;
+    hook = &pages.back();
+    delete tempPage;
+}
+
 Page BufferManager::insertIntoPool(string tableName, int pageIndex){
     logger.log("BufferManager::insertIntoPool");
     Page page(tableName, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
     pages.push_back(page);
+    logger.log("Page::Left insertIntoPool");
     return page;
 }
-
-// void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
-//     logger.log("BufferManager(matrix)::insertIntoPool");
-//     hook = new Page(matrix, pageIndex);
-//     if (this->pages.size() >= BLOCK_COUNT)  
-//         pages.pop_front();
-//     pages.push_back(*hook);
-// }
-
 
 void BufferManager::insertIntoPool(Matrix &matrix, int pageIndex, Page* &hook){
     logger.log("BufferManager(matrix)::insertIntoPool");

@@ -1,10 +1,11 @@
 #pragma once
-#include "base.h"
 #include "logger.h"
 #include "timer.h"
 #include "bufferManager.h"
 #include "tableCatalogue.h"
 #include "matrixCatalogue.h"
+#include "mycursor.h"
+#include "sort.h"
 
 extern float BLOCK_SIZE;
 extern uint BLOCK_COUNT;
@@ -21,3 +22,6 @@ extern void resetBlockStats();
 void printBlockStats();
 extern bool process_input();
 int yyparse();
+
+extern stack<string> evaluatedTable;
+extern Sort sortQuery;
