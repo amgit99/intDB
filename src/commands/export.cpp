@@ -7,18 +7,20 @@
  * SYNTAX: EXPORT <relation_name> 
  */
 
-bool semanticParseEXPORT(){
+bool semanticParseEXPORT(char* _tableName){
     logger.log("semanticParseEXPORT");
-    // //Table should exist
-    // if (tableCatalogue.isTable(parsedQuery.exportRelationName))
-    //     return true;
-    // cout << "SEMANTIC ERROR: No such relation exists" << endl;
+    string tableName = _tableName;
+    //Table should exist
+    if (tableCatalogue.isTable(tableName))
+        return true;
+    cout << "SEMANTIC ERROR: No such relation exists" << endl;
     return false;
 }
 
-void executeEXPORT(){
+void executeEXPORT(char* _tableName){
+    string tableName = _tableName;
     logger.log("executeEXPORT");
-    // Table* table = tableCatalogue.getTable(parsedQuery.exportRelationName);
-    // table->makePermanent();
+    Table* table = tableCatalogue.getTable(tableName);
+    table->makePermanent();
     return;
 }

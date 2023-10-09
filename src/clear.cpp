@@ -5,18 +5,20 @@
  * SYNTAX: CLEAR <relation_name> 
  */
 
-bool semanticParseCLEAR(){
+bool semanticParseCLEAR(char* _tableName){
     logger.log("semanticParseCLEAR");
-    // //Table should exist
-    // if (tableCatalogue.isTable(parsedQuery.clearRelationName))
-    //     return true;
-    // cout << "SEMANTIC ERROR: No such relation exists" << endl;
+    string tableName = _tableName;
+    //Table should exist
+    if (tableCatalogue.isTable(tableName))
+        return true;
+    cout << "SEMANTIC ERROR: No such relation exists" << endl;
     return false;
 }
 
-void executeCLEAR(){
+void executeCLEAR(char* _tableName){
+    string tableName = _tableName;
     logger.log("executeCLEAR");
-    //Deleting table from the catalogue deletes all temporary files
-    // tableCatalogue.deleteTable(parsedQuery.clearRelationName);
+    // Deleting table from the catalogue deletes all temporary files
+    tableCatalogue.deleteTable(tableName);
     return;
 }

@@ -7,7 +7,7 @@ EXEC_DIR = ./bin
 INCLUDE_DIR = ./include/
 
 # Compiler flags
-CXX = clang++ -std=c++11
+CXX = g++ -std=c++11
 CXXFLAGS = -g -I $(INCLUDE_DIR)
 
 # Source files and corresponding object files

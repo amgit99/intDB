@@ -3,10 +3,10 @@
 
 void executeCommand();
 
-void executeCLEAR();
+void executeCLEAR(char* _tableName);
 void executeCROSS();
 void executeDISTINCT();
-void executeEXPORT();
+void executeEXPORT(char* _tableName);
 void executeINDEX();
 void executeJOIN();
 void executeLIST();

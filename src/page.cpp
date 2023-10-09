@@ -137,6 +137,6 @@ void Page::writePage(){
         }
         fout << endl;
     }
-    logger.log("LEFT weite page");
+    logger.log("LEFT write page");
     fout.close();
 }

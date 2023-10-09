@@ -3,10 +3,10 @@
 
 bool semanticParse();
 
-bool semanticParseCLEAR();
+bool semanticParseCLEAR(char* _tableName);
 bool semanticParseCROSS();
 bool semanticParseDISTINCT();
-bool semanticParseEXPORT();
+bool semanticParseEXPORT(char* _tableName);
 bool semanticParseINDEX();
 bool semanticParseJOIN();
 bool semanticParseLIST();

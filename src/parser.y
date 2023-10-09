@@ -9,7 +9,7 @@ void yyerror(const char* s);
 %}
 
 %union {
-    int intval, argc_;
+    int intval;
     char* strval;
     bool boolval;
 }
@@ -63,6 +63,15 @@ void yyerror(const char* s);
 %token BOOL_LITERAL_
 
 %type <strval> IDENTIFIER_
+%type <strval> binop
+%type <strval> GT_
+%type <strval> LT_
+%type <strval> EQ_
+%type <strval> NEQ_
+%type <strval> LTEQ_
+%type <strval> GTEQ_
+%type <strval> EQGT_
+%type <strval> EQLT_
 %type <intval> INT_LITERAL_
 %type <boolval> BOOL_LITERAL_
 
@@ -73,8 +82,18 @@ Statement:
          | non_assignment_statement  { return 0; }
          ;
 
-assignment_statement: IDENTIFIER_ ASSIGN_ARROW_ relation { cout << "final assign" << endl; return 0; }
+assignment_statement: result_table_name ASSIGN_ARROW_ relation 
+                        {
+                          cout << "final assign" << endl; return 0; 
+                        }
                     ;
+
+result_table_name: IDENTIFIER_
+                    {
+                      cout << "result: " << $1 << endl;
+                      RESULT_TABLE_NAME = $1;
+                    }
+                 ;
 
 relation: cross_product_statement { cout << "cross_product_statement" << endl; }
         | distinct_statement
@@ -89,6 +108,7 @@ non_assignment_statement: clear_statement
                         | list_statement
                         | load_statement
                         | print_statement
+                        | export_statement
                         | sort_statement
                               {
                                 cout << "sort complete" << endl;
@@ -114,11 +134,6 @@ non_assignment_statement: clear_statement
                                 if(semanticParseCHECKSYMMETRY($2)) 
                                     executeCHECKSYMMETRY($2); 
                               }
-                        | EXPORT_ MATRIX_ IDENTIFIER_
-                              { 
-                                if(semanticParseEXPORTMATRIX($3)) 
-                                    executeEXPORTMATRIX($3); 
-                              }
                         | TRANSPOSE_ IDENTIFIER_
                               { 
                                 if(semanticParseTRANSPOSEMATRIX($2)) 
@@ -126,7 +141,16 @@ non_assignment_statement: clear_statement
                               }
                         ;
 
-cross_product_statement: CROSS_ relation relation { cout << "cross" << endl; }
+
+cross_product_statement: CROSS_ IDENTIFIER_ IDENTIFIER_
+                              {
+                                cout << "cross" << endl;
+                                crossQuery.resultTableName = RESULT_TABLE_NAME;
+                                crossQuery.table1Name = $2;
+                                crossQuery.table2Name = $3;
+                                if(semanticParseCROSS())
+                                    executeCROSS();
+                              }
                        ;
 
 distinct_statement: DISTINCT_ relation
@@ -135,18 +159,48 @@ distinct_statement: DISTINCT_ relation
 join_statement: JOIN_ relation relation ON_ IDENTIFIER_ binop IDENTIFIER_
               ;
 
-projection_statement: PROJECT_ projection_list FROM_ relation
+projection_statement: PROJECT_ projection_list FROM_ IDENTIFIER_
+                        {
+                          projectionQuery.sourceTableName = $4;
+                          if(semanticParsePROJECTION())
+                              executePROJECTION();
+                        }
                     ;
 
 projection_list: projection_list IDENTIFIER_ 
+                  {
+                    // cout << $2 << endl;
+                    projectionQuery.projectedColumns.push_back($2);
+                  }
                | IDENTIFIER_
+                  {
+                    // cout << $1 << endl;
+                    projectionQuery.projectedColumns.push_back($1);
+                  }
                ;
 
-selection_statement: SELECT_ condition FROM_ relation
+selection_statement: SELECT_ condition FROM_ IDENTIFIER_
+                      {
+                        selectionQuery.sourceTableName = $4;
+                        if(semanticParseSELECTION())
+                            executeSELECTION();
+                      }
                    ;
 
 condition: IDENTIFIER_ binop IDENTIFIER_ 
+            {
+              CONDITION_L_COLUMN_NAME = $1;
+              CONDITION_BINOP = $2;
+              selectionQuery.selectType = COLUMN;
+              CONDITION_R_COLUMN_NAME = $3;
+            }
          | IDENTIFIER_ binop INT_LITERAL_ 
+            {
+              CONDITION_L_COLUMN_NAME = $1;
+              CONDITION_BINOP = $2;
+              selectionQuery.selectType = INT_LITERAL;
+              CONDITION_R_INTVAL = $3;
+            }
          ;
 
 binop: GT_
@@ -174,6 +228,10 @@ arg_list: IDENTIFIER_ IN_ BOOL_LITERAL_
               }
 
 clear_statement: CLEAR_ IDENTIFIER_
+                        { 
+                          if(semanticParseCLEAR($2)) 
+                              executeCLEAR($2); 
+                        }
                ;
 
 index_statement: INDEX_ ON_ IDENTIFIER_ FROM_ relation USING_ indexing_strategy
@@ -197,6 +255,9 @@ indexing_strategy: HASH_
                  ;
 
 list_statement: LIST_ TABLES_
+                  {
+                    executeLIST();
+                  }
               ;
 
 load_statement: LOAD_ IDENTIFIER_
@@ -222,6 +283,19 @@ print_statement: PRINT_ IDENTIFIER_
                           executePRINTMATRIX($3); 
                     }
                ;
+
+
+export_statement: EXPORT_ IDENTIFIER_
+                        { 
+                              if(semanticParseEXPORT($2)) 
+                              executeEXPORT($2); 
+                        }
+                | EXPORT_ MATRIX_ IDENTIFIER_
+                        { 
+                              if(semanticParseEXPORTMATRIX($3)) 
+                              executeEXPORTMATRIX($3); 
+                        }
+
 %%
 
 void yyerror(const char* s) {

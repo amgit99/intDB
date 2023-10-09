@@ -25,14 +25,14 @@
 "RENAME"                { return RENAME_; }
 "SOURCE"                { return SOURCE_; }
 "MATRIX"                { return MATRIX_; }
-">"                     { return GT_; }
-"<"                     { return LT_; }
-"=="                    { return EQ_; }
-"!="                    { return NEQ_; }
-"<="                    { return LTEQ_; }
-">="                    { return GTEQ_; }
-"=>"                    { return EQGT_; }
-"=<"                    { return EQLT_; }
+">"                     { yylval.strval = strdup(yytext); return GT_;   }
+"<"                     { yylval.strval = strdup(yytext); return LT_;   }
+"=="                    { yylval.strval = strdup(yytext); return EQ_;   }
+"!="                    { yylval.strval = strdup(yytext); return NEQ_;  }
+"<="                    { yylval.strval = strdup(yytext); return LTEQ_; }
+">="                    { yylval.strval = strdup(yytext); return GTEQ_; }
+"=>"                    { yylval.strval = strdup(yytext); return EQGT_; }
+"=<"                    { yylval.strval = strdup(yytext); return EQLT_; }
 "ASC"                   { yylval.boolval = 0; return BOOL_LITERAL_; }
 "DESC"                  { yylval.boolval = 1; return BOOL_LITERAL_; }
 "HASH"                  { return HASH_; }
