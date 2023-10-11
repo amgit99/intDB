@@ -4,7 +4,7 @@
 %}
 
 %%
-[ \t\n]+                  ; // Skip whitespace and newline
+[ \t\n]+                ; // Skip whitespace and newline
 "<-"                    { return ASSIGN_ARROW_; }
 "CROSS"                 { return CROSS_; }
 "DISTINCT"              { return DISTINCT_; }
@@ -12,6 +12,10 @@
 "PROJECT"               { return PROJECT_; }
 "SELECT"                { return SELECT_; }
 "SORT"                  { return SORT_; }
+"ORDER"                 { return ORDER_; }
+"GROUP"                 { return GROUP_; }
+"HAVING"                { return HAVING_; }
+"RETURN"                { return RETURN_; }
 "CLEAR"                 { return CLEAR_; }
 "INDEX"                 { return INDEX_; }
 "LIST"                  { return LIST_; }
@@ -25,14 +29,21 @@
 "RENAME"                { return RENAME_; }
 "SOURCE"                { return SOURCE_; }
 "MATRIX"                { return MATRIX_; }
-">"                     { return GT_; }
-"<"                     { return LT_; }
-"=="                    { return EQ_; }
-"!="                    { return NEQ_; }
-"<="                    { return LTEQ_; }
-">="                    { return GTEQ_; }
-"=>"                    { return EQGT_; }
-"=<"                    { return EQLT_; }
+">"                     { yylval.strval = strdup(yytext); return GT_; }
+"<"                     { yylval.strval = strdup(yytext); return LT_; }
+"=="                    { yylval.strval = strdup(yytext); return EQ_; }
+"!="                    { yylval.strval = strdup(yytext); return NEQ_; }
+"<="                    { yylval.strval = strdup(yytext); return LTEQ_; }
+">="                    { yylval.strval = strdup(yytext); return GTEQ_; }
+"=>"                    { yylval.strval = strdup(yytext); return EQGT_; }
+"=<"                    { yylval.strval = strdup(yytext); return EQLT_; }
+"("                     { return CURLY_OPEN_  ;}
+")"                     { return CURLY_CLOSE_ ;}
+"MIN"                   { yylval.intval = 1; return MIN_; }
+"MAX"                   { yylval.intval = 2; return MAX_; }
+"SUM"                   { yylval.intval = 3; return SUM_; }
+"COUNT"                 { yylval.intval = 4; return COUNT_; }
+"AVG"                   { yylval.intval = 5; return AVG_; }
 "ASC"                   { yylval.boolval = 0; return BOOL_LITERAL_; }
 "DESC"                  { yylval.boolval = 1; return BOOL_LITERAL_; }
 "HASH"                  { return HASH_; }

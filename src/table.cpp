@@ -40,6 +40,21 @@ Table::Table(string tableName, vector<string> columns){
     this->writeRow<string>(columns);
 }
 
+
+Table::Table(string tableName, Table* ogTable){
+    logger.log("Table::Table");
+    this->sourceFileName = "data/temp/" + tableName + ".csv";
+    this->tableName = tableName;
+
+    this->columns = ogTable->columns;
+    this->distinctValuesPerColumnCount = ogTable->distinctValuesPerColumnCount;
+    this->columnCount = ogTable->columnCount;
+    this->rowCount = ogTable->rowCount;
+    this->blockCount = ogTable->blockCount;
+    this->maxRowsPerBlock = ogTable->maxRowsPerBlock;
+    this->rowsPerBlockCount = ogTable->rowsPerBlockCount;
+}
+
 /**
  * @brief The load function is used when the LOAD command is encountered. It
  * reads data from the source file, splits it into blocks and updates table
@@ -204,10 +219,11 @@ void Table::print(){
     //print headings
     this->writeRow(this->columns, cout);
 
-    Cursor cursor(this->tableName, 0);
+    MyCursor cursor(this->tableName, 0);
+    logger.log("REACHED HEREEEEEEE");
     vector<int> row;
     for (int rowCounter = 0; rowCounter < count; rowCounter++){
-        row = cursor.getNext();
+        row = cursor.getRow();
         this->writeRow(row, cout);
     }
     cout << "\n\nRow Count: " << this->rowCount << endl;

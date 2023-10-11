@@ -2,6 +2,7 @@
 #include "globals.h"
 
 MyCursor::MyCursor(string tableName, int pageIndex){
+    logger.log("MyCursor::MyCursor");
     this->tableName = tableName;
     Table* table = tableCatalogue.getTable(tableName);
     this->rowCount = table->rowCount;
@@ -10,6 +11,7 @@ MyCursor::MyCursor(string tableName, int pageIndex){
     this->pageIndex = pageIndex;
     this->rowNumber = 0;
     this->rowOffset = 0;
+    logger.log("LEFT MyCursor::MyCursor");
 }
 
 MyCursor::MyCursor(string tableName, long long rowIndex){
@@ -24,6 +26,7 @@ MyCursor::MyCursor(string tableName, long long rowIndex){
 }
 
 vector<int> MyCursor::getRow(){
+    logger.log("MyCursor::getRow");
     if(this->rowOffset==this->blockRowCount){
         int nextPageIndex = this->pageIndex+1;
         if(nextPageIndex == tableCatalogue.getTable(this->tableName)->blockCount){
@@ -40,6 +43,7 @@ vector<int> MyCursor::getRow(){
     else{
         this->rowCount++;
     }
+    logger.log("LEFT MyCursor::getRow");
     return this->page.rows[this->rowOffset++];
 }
 

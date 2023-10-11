@@ -46,46 +46,57 @@
      PROJECT_ = 262,
      SELECT_ = 263,
      SORT_ = 264,
-     CLEAR_ = 265,
-     INDEX_ = 266,
-     LIST_ = 267,
-     LOAD_ = 268,
-     EXPORT_ = 269,
-     PRINT_ = 270,
-     COMPUTE_ = 271,
-     CHECKSYMMETRY_ = 272,
-     TRANSPOSE_ = 273,
-     QUIT_ = 274,
-     RENAME_ = 275,
-     SOURCE_ = 276,
-     MATRIX_ = 277,
-     GT_ = 278,
-     LT_ = 279,
-     EQ_ = 280,
-     NEQ_ = 281,
-     LTEQ_ = 282,
-     GTEQ_ = 283,
-     EQGT_ = 284,
-     EQLT_ = 285,
-     ASC_ = 286,
-     DESC_ = 287,
-     HASH_ = 288,
-     BTREE_ = 289,
-     NOTHING_ = 290,
-     COMMA_ = 291,
-     ON_ = 292,
-     FROM_ = 293,
-     TO_ = 294,
-     USING_ = 295,
-     TABLES_ = 296,
-     BY_ = 297,
-     IN_ = 298,
-     AND_ = 299,
-     OR_ = 300,
-     NOT_ = 301,
-     IDENTIFIER_ = 302,
-     INT_LITERAL_ = 303,
-     BOOL_LITERAL_ = 304
+     ORDER_ = 265,
+     GROUP_ = 266,
+     HAVING_ = 267,
+     RETURN_ = 268,
+     CLEAR_ = 269,
+     INDEX_ = 270,
+     LIST_ = 271,
+     LOAD_ = 272,
+     EXPORT_ = 273,
+     PRINT_ = 274,
+     COMPUTE_ = 275,
+     CHECKSYMMETRY_ = 276,
+     TRANSPOSE_ = 277,
+     QUIT_ = 278,
+     RENAME_ = 279,
+     SOURCE_ = 280,
+     MATRIX_ = 281,
+     GT_ = 282,
+     LT_ = 283,
+     EQ_ = 284,
+     NEQ_ = 285,
+     LTEQ_ = 286,
+     GTEQ_ = 287,
+     EQGT_ = 288,
+     EQLT_ = 289,
+     MIN_ = 290,
+     MAX_ = 291,
+     SUM_ = 292,
+     COUNT_ = 293,
+     AVG_ = 294,
+     ASC_ = 295,
+     DESC_ = 296,
+     CURLY_OPEN_ = 297,
+     CURLY_CLOSE_ = 298,
+     HASH_ = 299,
+     BTREE_ = 300,
+     NOTHING_ = 301,
+     COMMA_ = 302,
+     ON_ = 303,
+     FROM_ = 304,
+     TO_ = 305,
+     USING_ = 306,
+     TABLES_ = 307,
+     BY_ = 308,
+     IN_ = 309,
+     AND_ = 310,
+     OR_ = 311,
+     NOT_ = 312,
+     IDENTIFIER_ = 313,
+     INT_LITERAL_ = 314,
+     BOOL_LITERAL_ = 315
    };
 #endif
 /* Tokens.  */
@@ -96,46 +107,57 @@
 #define PROJECT_ 262
 #define SELECT_ 263
 #define SORT_ 264
-#define CLEAR_ 265
-#define INDEX_ 266
-#define LIST_ 267
-#define LOAD_ 268
-#define EXPORT_ 269
-#define PRINT_ 270
-#define COMPUTE_ 271
-#define CHECKSYMMETRY_ 272
-#define TRANSPOSE_ 273
-#define QUIT_ 274
-#define RENAME_ 275
-#define SOURCE_ 276
-#define MATRIX_ 277
-#define GT_ 278
-#define LT_ 279
-#define EQ_ 280
-#define NEQ_ 281
-#define LTEQ_ 282
-#define GTEQ_ 283
-#define EQGT_ 284
-#define EQLT_ 285
-#define ASC_ 286
-#define DESC_ 287
-#define HASH_ 288
-#define BTREE_ 289
-#define NOTHING_ 290
-#define COMMA_ 291
-#define ON_ 292
-#define FROM_ 293
-#define TO_ 294
-#define USING_ 295
-#define TABLES_ 296
-#define BY_ 297
-#define IN_ 298
-#define AND_ 299
-#define OR_ 300
-#define NOT_ 301
-#define IDENTIFIER_ 302
-#define INT_LITERAL_ 303
-#define BOOL_LITERAL_ 304
+#define ORDER_ 265
+#define GROUP_ 266
+#define HAVING_ 267
+#define RETURN_ 268
+#define CLEAR_ 269
+#define INDEX_ 270
+#define LIST_ 271
+#define LOAD_ 272
+#define EXPORT_ 273
+#define PRINT_ 274
+#define COMPUTE_ 275
+#define CHECKSYMMETRY_ 276
+#define TRANSPOSE_ 277
+#define QUIT_ 278
+#define RENAME_ 279
+#define SOURCE_ 280
+#define MATRIX_ 281
+#define GT_ 282
+#define LT_ 283
+#define EQ_ 284
+#define NEQ_ 285
+#define LTEQ_ 286
+#define GTEQ_ 287
+#define EQGT_ 288
+#define EQLT_ 289
+#define MIN_ 290
+#define MAX_ 291
+#define SUM_ 292
+#define COUNT_ 293
+#define AVG_ 294
+#define ASC_ 295
+#define DESC_ 296
+#define CURLY_OPEN_ 297
+#define CURLY_CLOSE_ 298
+#define HASH_ 299
+#define BTREE_ 300
+#define NOTHING_ 301
+#define COMMA_ 302
+#define ON_ 303
+#define FROM_ 304
+#define TO_ 305
+#define USING_ 306
+#define TABLES_ 307
+#define BY_ 308
+#define IN_ 309
+#define AND_ 310
+#define OR_ 311
+#define NOT_ 312
+#define IDENTIFIER_ 313
+#define INT_LITERAL_ 314
+#define BOOL_LITERAL_ 315
 
 
 
@@ -144,12 +166,12 @@
 typedef union YYSTYPE
 #line 11 "./src/parser.y"
 {
-    int intval, argc_;
+    int intval;
     char* strval;
     bool boolval;
 }
 /* Line 1529 of yacc.c.  */
-#line 153 "parser.tab.h"
+#line 175 "parser.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

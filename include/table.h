@@ -40,6 +40,7 @@ public:
     Table();
     Table(string tableName);
     Table(string tableName, vector<string> columns);
+    Table(string newTableName, Table* ogTable);
     bool load();
     bool isColumn(string columnName);
     void renameColumn(string fromColumnName, string toColumnName);

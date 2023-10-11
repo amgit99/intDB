@@ -10,6 +10,25 @@ void TableCatalogue::deleteTable(string tableName){
     delete this->tables[tableName];
     this->tables.erase(tableName);
 }
+void TableCatalogue::renameTable(string oldTable, string newTable){
+    logger.log("TableCatalogue::renameTable");
+    Table* table = this->tables[oldTable];
+    table->tableName = newTable;
+    this->tables[newTable] = table;
+    this->tables.erase(oldTable);
+
+    logger.log("TableCatalogue::catalogue Updated");
+
+    for(int i=0; i<table->blockCount; ++i){
+        string ofn = oldTable+"_Page"+to_string(i);
+        string nfn = newTable+"_Page"+to_string(i);
+        ofn = "data/temp/"+ofn; nfn = "data/temp/"+nfn;
+        string command = "mv -f "+ofn+" "+nfn;
+        system(command.c_str());
+    }
+    logger.log("TableCatalogue::LEFT renameTable");
+}
+
 Table* TableCatalogue::getTable(string tableName){
     logger.log("TableCatalogue::getTable");
     logger.log(tableName);

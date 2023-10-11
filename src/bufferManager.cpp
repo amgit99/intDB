@@ -29,13 +29,13 @@ void BufferManager::getPage(string tableName, int pageIndex, Page* &hook){
     logger.log("BufferManager::getPage");
     string pageName = "./data/temp/" + tableName + "_Page" + to_string(pageIndex);
     if (this->inPool(pageName)){
-        logger.log("BufferManager::Left getPage");
+        
         this->getFromPool(pageName, hook);
     }
     else {
-        logger.log("BufferManager::Left getPage");
         this->insertIntoPool(tableName, pageIndex, hook);
     }
+    logger.log("BufferManager::Left getPage");
 }
 
 void BufferManager::getPage(Matrix &matrix, int pageIndex, Page* &hook){

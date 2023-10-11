@@ -8,13 +8,14 @@
  *
  */
 class TableCatalogue{
+public:
 
     unordered_map<string, Table*> tables;
 
-public:
     TableCatalogue() {}
     void insertTable(Table* table);
     void deleteTable(string tableName);
+    void renameTable(string oldTable, string newTable);
     Table* getTable(string tableName);
     bool isTable(string tableName);
     bool isColumnFromTable(string columnName, string tableName);

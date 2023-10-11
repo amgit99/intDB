@@ -1,6 +1,8 @@
 //Server Code
 #include "globals.h"
 #include "sort.h"
+#include "join.h"
+#include "group.h"
 
 using namespace std;
 
@@ -19,11 +21,19 @@ Timer stopwatch;
 TableCatalogue tableCatalogue;
 MatrixCatalogue matrixCatalogue;
 BufferManager bufferManager;
+
+stack<string> tableStack;
+stack<string> columnStack;
+stack<string> operationStack;
+stack<pair<int, string>> aggregateFunctionStack;
+stack<int> intOperandStack;
 bool __EOF__ = 0;
 
 // Query Objects
-stack<string> evaluatedTable;
 Sort sortQuery; 
+Order orderByQuery;
+Join joinQuery;
+Group groupByQuery;
 
 void resetBlockStats(){
     BLOCKS_READ = 0;
