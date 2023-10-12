@@ -14,7 +14,7 @@ int Group::getStat(int colId, int fnId){
 }
 
 bool Group::checkCondition(int conditionValue){
-    switch (op) {
+    switch (this->op) {
         case 1: return conditionValue >  this->conditionFiledValue;
         case 2: return conditionValue <  this->conditionFiledValue;
         case 3: return conditionValue == this->conditionFiledValue;
@@ -26,7 +26,7 @@ bool Group::checkCondition(int conditionValue){
 }
 
 bool Group::updateStats(vector<int> &row){
-    if(currentGroupingFieldValue!=row[groupingColumnId] || fin){
+    if(currentGroupingFieldValue!=row[groupingColumnId]){
         this->newRow = {currentGroupingFieldValue, this->getStat(this->returnColumnId, this->returnFunction)};
         int conditionValue = this->getStat(this->conditionColumnId, this->conditionFunction);
         currentGroupingFieldValue = row[groupingColumnId];
@@ -41,20 +41,21 @@ bool Group::updateStats(vector<int> &row){
         this->stats[this->returnColumnId].sum_ = row[this->returnColumnId];
         this->stats[this->returnColumnId].count_ = 1;
 
-        if(init) { init = 0; return false; }
         if(this->checkCondition(conditionValue)) return true;
         else return false;
 
     } else {
-        this->stats[this->conditionColumnId].min_ = min(this->stats[this->conditionColumnId].min_, row[this->conditionColumnId]);
-        this->stats[this->conditionColumnId].max_ = max(this->stats[this->conditionColumnId].max_, row[this->conditionColumnId]);
-        this->stats[this->conditionColumnId].sum_ += row[this->conditionColumnId];
+        this->stats[this->conditionColumnId].min_   = min(this->stats[this->conditionColumnId].min_, row[this->conditionColumnId]);
+        this->stats[this->conditionColumnId].max_   = max(this->stats[this->conditionColumnId].max_, row[this->conditionColumnId]);
+        this->stats[this->conditionColumnId].sum_   += row[this->conditionColumnId];
         this->stats[this->conditionColumnId].count_ += 1;
 
-        this->stats[this->returnColumnId].min_ = min(this->stats[this->returnColumnId].min_, row[this->returnColumnId]);
-        this->stats[this->returnColumnId].max_ = max(this->stats[this->returnColumnId].max_, row[this->returnColumnId]);
-        this->stats[this->returnColumnId].sum_ += row[this->returnColumnId];
-        this->stats[this->returnColumnId].count_ += 1;
+        if(this->conditionColumnId != this->returnColumnId) {
+            this->stats[this->returnColumnId].min_   = min(this->stats[this->returnColumnId].min_, row[this->returnColumnId]);
+            this->stats[this->returnColumnId].max_   = max(this->stats[this->returnColumnId].max_, row[this->returnColumnId]);
+            this->stats[this->returnColumnId].sum_   += row[this->returnColumnId];
+            this->stats[this->returnColumnId].count_ += 1;
+        }
 
         return false;
     }
@@ -107,9 +108,9 @@ bool Group::checkArgs(){
     else if (opstr=="==") this->op = 3;
     else if (opstr=="!=") this->op = 4;
     else if (opstr=="<=") this->op = 5;
+    else if (opstr=="=<") this->op = 5;
     else if (opstr==">=") this->op = 6;
     else if (opstr=="=>") this->op = 6;
-    else if (opstr=="=<") this->op = 5;
 
     return true;
 }
@@ -136,10 +137,23 @@ bool Group::execute(){
     vector<vector<int>> groupVec;
     int pageId = 0;
     MyCursor cursor = MyCursor(this->tableName, 0);
-    vector<int> row;
-    for(int rowNumber = 0; rowNumber < table->rowCount; ++rowNumber){
-        if(rowNumber == table->rowCount-1) fin = 1;
+    vector<int> row = cursor.getRow();
+
+    this->stats[this->conditionColumnId].min_ = row[this->conditionColumnId];
+    this->stats[this->conditionColumnId].max_ = row[this->conditionColumnId];
+    this->stats[this->conditionColumnId].sum_ = row[this->conditionColumnId];
+    this->stats[this->conditionColumnId].count_ = 1;
+
+    this->stats[this->returnColumnId].min_   = row[this->returnColumnId];
+    this->stats[this->returnColumnId].max_   = row[this->returnColumnId];
+    this->stats[this->returnColumnId].sum_   = row[this->returnColumnId];
+    this->stats[this->returnColumnId].count_ = 1;
+
+    this->currentGroupingFieldValue = row[this->groupingColumnId];
+
+    for(int rowNumber = 1; rowNumber < table->rowCount; ++rowNumber){
         row = cursor.getRow();
+        if(rowNumber == table->rowCount-1) fin = 1;
         if(this->updateStats(row)){
             groupVec.push_back(this->newRow);
             ++newTable->rowCount;
@@ -150,6 +164,12 @@ bool Group::execute(){
             newTable->rowsPerBlockCount.push_back(groupVec.size());
             groupVec = {};
         }
+    }
+    this->newRow = {currentGroupingFieldValue, this->getStat(this->returnColumnId, this->returnFunction)};
+    int conditionValue = this->getStat(this->conditionColumnId, this->conditionFunction);
+    if(this->checkCondition(conditionValue)){
+        groupVec.push_back(this->newRow);
+        ++newTable->rowCount;
     }
     if(groupVec.size()>0){
         bufferManager.writePage(newTableName, pageId++, groupVec, groupVec.size());
@@ -163,16 +183,6 @@ bool Group::execute(){
     // ADD NEWLY CREATED TABLE TO STACK
     tableStack.push(newTableName);
 
+    if(newTable->rowCount==0) {tableCatalogue.deleteTable(newTableName); return EXECUTION_SUCCESSFUL = false;}
     return EXECUTION_SUCCESSFUL = true;
 }
-
-
-
-
-// <new_table> <- GROUP BY <grouping_attribute> 
-//                FROM <table_name> 
-//                HAVING <aggregate(attribute)> <bin_op> <attribute_value> 
-//                RETURN <aggregate_func(attribute)>
-
-
-// pips <- GROUP BY C FROM lol HAVING MAX(A) > 25 RETURN MAX(D)
