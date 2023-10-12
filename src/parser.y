@@ -107,11 +107,13 @@ Statement:
 
 assignment_statement: new_relation ASSIGN_ARROW_ relation 
                         {     
-                              string oldName = tableStack.top();
-                              tableStack.pop();
-                              string newName = tableStack.top();
-                              tableStack.pop();
-                              tableCatalogue.renameTable(oldName, newName);
+                              if(EXECUTION_SUCCESSFUL){
+                                    string oldName = tableStack.top();
+                                    tableStack.pop();
+                                    string newName = tableStack.top();
+                                    tableStack.pop();
+                                    tableCatalogue.renameTable(oldName, newName);
+                              }
                         }
 
 new_relation: IDENTIFIER_ 
@@ -142,10 +144,7 @@ non_assignment_statement: clear_statement
                               {
                                 cout << "sort complete" << endl;
                               }
-                        | QUIT_
-                              { 
-                                return 69; 
-                              }
+                        | QUIT_ { exit(0); }
                         | rename_statement
                         | SOURCE_ IDENTIFIER_
                               { 
@@ -214,6 +213,12 @@ projection_list: projection_list IDENTIFIER_
                     // cout << $2 << endl;
                     projectionQuery.projectedColumns.push_back($2);
                   }
+               | IDENTIFIER_
+                  {
+                    // cout << $1 << endl;
+                    projectionQuery.projectedColumns.push_back($1);
+                  }
+               ;
 
 selection_statement: SELECT_ condition FROM_ IDENTIFIER_
                       {

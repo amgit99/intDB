@@ -112,7 +112,9 @@ void Join::execute(){
         Page pageL = bufferManager.getPage(this->table1Name, pageIndexL);
         for(int pageIndexR = 0; pageIndexR < table2->blockCount; ++pageIndexR ){
             Page pageR = bufferManager.getPage(this->table2Name, pageIndexR);
+            int rightOffset = 0;
             for(int lineL = 0; lineL < pageL.rowCount; ++lineL){
+                if(this->op!=3) rightOffset = 0;
                 vector<int> rowL = pageL.rows[lineL];
                 for(int lineR = 0; lineR < pageR.rowCount; ++lineR){
                     vector<int> rowR = pageR.rows[lineR];
@@ -132,7 +134,7 @@ void Join::execute(){
                         continue;
                     } else if (this->op == 4) {
                         continue;
-                    } else break;
+                    } else { rightOffset = lineR; break; }
                 }
             }
         }
@@ -150,4 +152,6 @@ void Join::execute(){
 
     // add newly created table to stack
     tableStack.push(joinedTableName);
+
+    EXECUTION_SUCCESSFUL = true;
 }

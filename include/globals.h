@@ -24,6 +24,7 @@ extern TableCatalogue tableCatalogue;
 extern MatrixCatalogue matrixCatalogue;
 extern BufferManager bufferManager;
 extern bool __EOF__;
+extern bool EXECUTION_SUCCESSFUL;
 extern string command;
 extern void resetBlockStats();
 void printBlockStats();

@@ -12,7 +12,6 @@ void Projection:: clear(){
     return;
 }
 
-
 bool semanticParsePROJECTION(){
     logger.log("semanticParsePROJECTION");
 

@@ -26,7 +26,7 @@ PARSER_OBJS = ./obj/parser.o ./obj/lexer.o
 
 all: server
 
-server: $(OBJS) $(COMMANDS_OBJS) $(PARSER_OBJS)
+server: $(PARSER_OBJS) $(OBJS) $(COMMANDS_OBJS)
 	$(CXX) $(CXXFLAGS) -o ./bin/$@ $(OBJS) $(COMMANDS_OBJS) $(PARSER_OBJS)
 	# cp /Users/amit/Downloads/matrix.csv ./data/matrix.csv
 	./bin/server
@@ -53,8 +53,9 @@ $(COMMAND_OBJ_DIR)/%.o: $(COMMANDS_DIR)/.cpp $(INCLUDE_DIR)/globals.h
 $(PARSER_OBJS): $(LEXER_SRC) $(PARSER_SRC) 
 	flex $(LEXER_SRC)
 	bison -d $(PARSER_SRC)
-	mv lex.yy.c src/lex.yy.c
-	mv parser.tab.c src/parser.tab.c
+	mv lex.yy.c lex.yy.cpp
+	mv parser.tab.c parser.tab.cpp
 	mv parser.tab.h include/parser.tab.h
-	$(CXX) $(CXXFLAGS) -c -o obj/lexer.o src/lex.yy.c
-	$(CXX) $(CXXFLAGS) -c -o obj/parser.o src/parser.tab.c
+	$(CXX) $(CXXFLAGS) -c -o obj/lexer.o lex.yy.cpp
+	$(CXX) $(CXXFLAGS) -c -o obj/parser.o parser.tab.cpp
+	rm -f parser.tab.cpp lex.yy.cpp

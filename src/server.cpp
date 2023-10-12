@@ -28,6 +28,7 @@ stack<string> operationStack;
 stack<pair<int, string>> aggregateFunctionStack;
 stack<int> intOperandStack;
 bool __EOF__ = 0;
+bool EXECUTION_SUCCESSFUL = 0;
 
 // Assignment Statement Result Table Name
 string RESULT_TABLE_NAME = "";

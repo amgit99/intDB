@@ -18,6 +18,7 @@ bool Order::updateArgList(char* _columnName, bool columnOrder){
     }
     this->columnName = columnName;
     this->order = columnOrder;
+    return true;
 }
 
 bool Order::execute(){
@@ -27,4 +28,5 @@ bool Order::execute(){
     sortQuery.columnOrderList.push_back(this->order);
     sortQuery.execute(1);
     logger.log("Order:: LEFT exectute");
+    return EXECUTION_SUCCESSFUL = true;
 }

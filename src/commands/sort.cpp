@@ -129,15 +129,15 @@ bool Sort::execute(bool makeCopy){
 
     int level = 1, renamed;
     while(level < table->blockCount){
-        for(int i=0; i+level < table->blockCount; i+=2*level) 
+        for(int i=0; i+level < table->blockCount; i+=2*level) {
             renamed = merge(level, i, i+level);
-            cout << "RENAMED :: " << renamed << endl;
-        for(int i=0; i<renamed; ++i){
-            string ofn = "tempSORTED"+this->table->tableName+"_Page"+to_string(i);
-            string nfn = "SORTED"+this->table->tableName+"_Page"+to_string(i);
-            ofn = "data/temp/"+ofn; nfn = "data/temp/"+nfn;
-            string command = "mv -f "+ofn+" "+nfn;
-            system(command.c_str());
+            for(int pgno=i; pgno<renamed; ++pgno){
+                string ofn = "tempSORTED"+this->table->tableName+"_Page"+to_string(pgno);
+                string nfn = "SORTED"+this->table->tableName+"_Page"+to_string(pgno);
+                ofn = "data/temp/"+ofn; nfn = "data/temp/"+nfn;
+                string command = "mv -f "+ofn+" "+nfn;
+                system(command.c_str());
+            }
         }
         level *= 2;
     }

@@ -9,6 +9,7 @@ int Group::getStat(int colId, int fnId){
         case 3: return this->stats[colId].sum_;
         case 4: return this->stats[colId].count_;
         case 5: return this->stats[colId].sum_/this->stats[colId].count_;
+        default: return -1;
     }
 }
 
@@ -20,6 +21,7 @@ bool Group::checkCondition(int conditionValue){
         case 4: return conditionValue != this->conditionFiledValue;
         case 5: return conditionValue <= this->conditionFiledValue;
         case 6: return conditionValue >= this->conditionFiledValue;
+        default: return false;
     }
 }
 
@@ -113,13 +115,6 @@ bool Group::checkArgs(){
 }
 
 bool Group::execute(){
-    cout << "tableName :: " << this->tableName << endl;
-    cout << "groupingColumn :: " << this->groupingColumn << endl;
-    cout << "conditionColumn :: " << this->conditionColumn << endl;
-    cout << "returnColumn :: " << this->returnColumn << endl;
-
-    cout << "op:: " << this->op << endl;
-    cout << "conditionFiledValue :: " << this->conditionFiledValue << endl;
 
     // SORT RELATIONS
     tableStack.push(this->tableName);
@@ -162,14 +157,13 @@ bool Group::execute(){
         newTable->rowsPerBlockCount.push_back(groupVec.size());
         groupVec = {};
     }
-    cout << "BLOCKS WRITTEN :: " << pageId << endl;
     // DELETE SORTED RELATION
     tableCatalogue.deleteTable(this->tableName);
 
     // ADD NEWLY CREATED TABLE TO STACK
     tableStack.push(newTableName);
 
-    return false;
+    return EXECUTION_SUCCESSFUL = true;
 }
 
 

@@ -26,6 +26,6 @@ void executeSOURCE(char* fileName){
     FILE *input_file = fopen(path.c_str(), "r");
     yyin = input_file;
     __EOF__ = 0;
-    while(!__EOF__) yyparse();
+    while(!__EOF__ ) { cout << "> "; yyparse(); } 
     fclose(input_file);
 }

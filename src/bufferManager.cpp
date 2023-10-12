@@ -80,6 +80,7 @@ Page BufferManager::getFromPool(string pageName){
     for (auto page : this->pages)
         if (pageName == page.pageName)
             return page;
+    return this->pages.front();
 }
 void BufferManager::getFromPool(string pageName, Page* &hook){
     logger.log("BufferManager(matrix)::getFromPool");
