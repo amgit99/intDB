@@ -12,6 +12,8 @@ void TableCatalogue::deleteTable(string tableName){
 }
 void TableCatalogue::renameTable(string oldTable, string newTable){
     logger.log("TableCatalogue::renameTable");
+    if(this->isTable(newTable)) cout << "ASSIGNED RELATION NAME TAKEN" << endl;
+    if(!this->isTable(oldTable)) cout << "TABLE DOES NOT EXIST" << endl;
     Table* table = this->tables[oldTable];
     table->tableName = newTable;
     this->tables[newTable] = table;

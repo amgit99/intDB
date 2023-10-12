@@ -29,11 +29,23 @@ stack<pair<int, string>> aggregateFunctionStack;
 stack<int> intOperandStack;
 bool __EOF__ = 0;
 
+// Assignment Statement Result Table Name
+string RESULT_TABLE_NAME = "";
+
+// Selection Statement attributes
+string CONDITION_L_COLUMN_NAME = "";
+string CONDITION_BINOP = "";
+int    CONDITION_R_INTVAL = 0;
+string CONDITION_R_COLUMN_NAME = "";
+
 // Query Objects
 Sort sortQuery; 
 Order orderByQuery;
 Join joinQuery;
 Group groupByQuery;
+Cross crossQuery; 
+Selection selectionQuery; 
+Projection projectionQuery;
 
 void resetBlockStats(){
     BLOCKS_READ = 0;
@@ -51,7 +63,10 @@ int main(void){
     system("rm -rf ./data/temp");
     system("mkdir ./data/temp");
 
-    while(yyparse()!=69);
+    while(true) {
+        cout << "> ";
+        if(yyparse()==69) break;
+    }
 
     system("rm -rf ./data/temp");
     system("mkdir ./data/temp");
