@@ -15,6 +15,10 @@
 | 2022201056     | Neeraj Asdev     | neeraj.asdev@students.iiit.ac.in     |
 
 
+
+**NOTE**: Some $\LaTeX$ symbols are failing to render on GitHub Markdown preview. Use [HackMD](https://hackmd.io/?nav=overview) to view this Markdown file.
+
+
 ## INTRODUCTION
 Here we are extending the features of the existing *__SimpleRA__* RDBMS by implementing and adding the commands dealing with **MATRICES**.
 
@@ -205,5 +209,6 @@ $$
 | 2022201006     | Jaffrey Joy      | `COMPUTE`, `RENAME`, `Page` and `BufferManager` modifications     |
 | 2022201013     | Amit Marathe     | `LOAD`, `EXPORT`, `PRINT`, `Page` and `BufferManager` modifications   |
 | 2022201056     | Neeraj Asdev     | `TRANSPOSE`, `CHECKSYMMETRY` and Command parsing    |
+
 
 
