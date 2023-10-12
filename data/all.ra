@@ -2,16 +2,16 @@ LOAD Student
 LOAD Advisor
 LOAD Marks
 R1 <- SELECT Stud_sex == 0 FROM Student
-R2 <- PROJECT Stud_Id, Stud_age FROM R1
+R2 <- PROJECT Stud_Id Stud_age FROM R1
 PRINT R2
 R3 <- SELECT Stud_sex == 1 FROM Student
 R4 <- SELECT Stud_age > 16 FROM R3
-P2 <- PROJECT Stud_Id, Stud_age FROM R4
+P2 <- PROJECT Stud_Id Stud_age FROM R4
 PRINT P2
 C2 <- CROSS Student Advisor
 R6 <- SELECT Advisor_id == Adv_Id FROM C2
 R7 <- SELECT Stud_sex != Adv_sex FROM R6
-P3 <- PROJECT Stud_Id, Adv_Id, Stud_sex, Adv_sex FROM R7
+P3 <- PROJECT Stud_Id Adv_Id Stud_sex Adv_sex FROM R7
 PRINT P3
 C3 <- CROSS Student Marks
 R8 <- SELECT Student_Stud_Id == Marks_Stud_Id FROM C3
@@ -19,16 +19,16 @@ R9 <- SELECT Maths_marks >= 70 FROM R8
 R10 <- SELECT Physics_marks > 60 FROM R9
 R11 <- SELECT Stud_age >= 16 FROM R10
 R12 <- SELECT Stud_age <= 18 FROM R11
-P4 <- PROJECT Student_Stud_Id, Maths_marks, Physics_marks, Stud_age FROM R12
+P4 <- PROJECT Student_Stud_Id Maths_marks Physics_marks Stud_age FROM R12
 PRINT P4
 adv_yoe_le4 <- SELECT Yrs_of_exp <= 4 FROM Advisor
 ayoele4_sal_gt3 <- SELECT Salary > 300000 FROM adv_yoe_le4
-ayoele4salgt3 <- PROJECT Adv_Id, Yrs_of_exp FROM ayoele4_sal_gt3
+ayoele4salgt3 <- PROJECT Adv_Id Yrs_of_exp FROM ayoele4_sal_gt3
 PRINT ayoele4salgt3
 adv_agt40 <- SELECT Adv_age > 40 FROM Advisor
 cross_s_aagt40 <- CROSS Student adv_agt40
 join_s_aagt40 <- SELECT Advisor_id == Adv_Id FROM cross_s_aagt40
-saagt40 <- PROJECT Stud_Id, Advisor_id FROM join_s_aagt40
+saagt40 <- PROJECT Stud_Id Advisor_id FROM join_s_aagt40
 PRINT saagt40
 adv_2 <- SELECT Adv_Id == 2 FROM Advisor
 mks_math_gt_90 <- SELECT Maths_marks > 90 FROM Marks
@@ -47,5 +47,5 @@ join_sf_a1 <- SELECT Advisor_id == Adv_Id FROM cross_sf_a1
 RENAME Stud_Id TO Student_Id FROM join_sf_a1
 cross_sfa1_mmgt70 <- CROSS join_sf_a1 mks_math_gt_70
 join_sfa1_mmgt70 <- SELECT Student_Id == Stud_Id FROM cross_sfa1_mmgt70
-sfa1mmgt70 <- PROJECT Stud_Id, Maths_marks FROM join_sfa1_mmgt70
+sfa1mmgt70 <- PROJECT Stud_Id Maths_marks FROM join_sfa1_mmgt70
 PRINT sfa1mmgt70

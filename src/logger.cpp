@@ -1,4 +1,4 @@
-#include "global.h"
+#include "logger.h"
 
 Logger::Logger(){
     this->fout.open(this->logFile, ios::out);

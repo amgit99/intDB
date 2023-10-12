@@ -1,4 +1,7 @@
-#include "global.h"
+#include "page.h"
+#include "table.h"
+#include "globals.h"
+
 /**
  * @brief Construct a new Page object. Never used as part of the code
  *
@@ -31,13 +34,18 @@ Page::Page(string tableName, int pageIndex){
     this->pageName = "./data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
     Table table = *tableCatalogue.getTable(tableName);
     this->columnCount = table.columnCount;
+    logger.log(to_string(this->columnCount));
     uint maxRowCount = table.maxRowsPerBlock;
+    logger.log(to_string(maxRowCount));
     vector<int> row(columnCount, 0);
     this->rows.assign(maxRowCount, row);
+
+    logger.log(to_string(this->rowCount));
 
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pageIndex];
     int number;
+
     for (uint rowCounter = 0; rowCounter < this->rowCount; rowCounter++){
         for (int columnCounter = 0; columnCounter < columnCount; columnCounter++){
             fin >> number;
@@ -45,6 +53,7 @@ Page::Page(string tableName, int pageIndex){
         }
     }
     fin.close();
+    logger.log("Page::Left Page");
 }
 
 /**
@@ -132,5 +141,6 @@ void Page::writePage(){
         }
         fout << endl;
     }
+    logger.log("LEFT write page");
     fout.close();
 }

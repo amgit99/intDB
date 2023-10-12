@@ -1,33 +1,26 @@
-#include "global.h"
+#include "table.h"
+#include "tableCatalogue.h"
+#include "globals.h"
 
 /**
  * @brief 
  * SYNTAX: EXPORT <relation_name> 
  */
 
-bool syntacticParseEXPORT(){
-    logger.log("syntacticParseEXPORT");
-    if (tokenizedQuery.size() != 2){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = EXPORT;
-    parsedQuery.exportRelationName = tokenizedQuery[1];
-    return true;
-}
-
-bool semanticParseEXPORT(){
+bool semanticParseEXPORT(char* _tableName){
     logger.log("semanticParseEXPORT");
+    string tableName = _tableName;
     //Table should exist
-    if (tableCatalogue.isTable(parsedQuery.exportRelationName))
+    if (tableCatalogue.isTable(tableName))
         return true;
     cout << "SEMANTIC ERROR: No such relation exists" << endl;
     return false;
 }
 
-void executeEXPORT(){
+void executeEXPORT(char* _tableName){
+    string tableName = _tableName;
     logger.log("executeEXPORT");
-    Table* table = tableCatalogue.getTable(parsedQuery.exportRelationName);
+    Table* table = tableCatalogue.getTable(tableName);
     table->makePermanent();
     return;
 }

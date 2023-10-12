@@ -206,8 +206,9 @@ $$
 
 | Roll No        | Name             | Work                                 |
 | -------------- | ---------------- | ------------------------------------ |
-| 2022201006     | Jaffrey Joy      | `COMPUTE`, `RENAME`, `Page` and `BufferManager` modifications, Report   |
+| 2022201006     | Jaffrey Joy      | `COMPUTE`, `RENAME`, `Page` and `BufferManager` modifications     |
 | 2022201013     | Amit Marathe     | `LOAD`, `EXPORT`, `PRINT`, `Page` and `BufferManager` modifications   |
-| 2022201056     | Neeraj Asdev     | `TRANSPOSE`, `CHECKSYMMETRY`, Command parsing,  Report   |
+| 2022201056     | Neeraj Asdev     | `TRANSPOSE`, `CHECKSYMMETRY` and Command parsing    |
+
 
 

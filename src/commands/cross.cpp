@@ -1,32 +1,34 @@
-#include "global.h"
+#include "globals.h"
+#include "table.h"
+#include "cross.h"
 
 /**
  * @brief 
  * SYNTAX: R <- CROSS relation_name relation_name
  */
-bool syntacticParseCROSS(){
-    logger.log("syntacticParseCROSS");
-    if (tokenizedQuery.size() != 5){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = CROSS;
-    parsedQuery.crossResultRelationName = tokenizedQuery[0];
-    parsedQuery.crossFirstRelationName = tokenizedQuery[3];
-    parsedQuery.crossSecondRelationName = tokenizedQuery[4];
-    return true;
+
+void Cross::clear(){
+    this->resultTableName = "";
+    this->table1Name = "";
+    this->table2Name = "";
+    RESULT_TABLE_NAME = "";
+    return;
 }
 
 bool semanticParseCROSS(){
     logger.log("semanticParseCROSS");
-    //Both tables must exist and resultant table shouldn't
-    if (tableCatalogue.isTable(parsedQuery.crossResultRelationName)){
-        cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
+    //Table shouldn't exist
+    if (tableCatalogue.isTable(crossQuery.resultTableName)){
+        cout << "SEMANTIC ERROR: Result relation " << crossQuery.resultTableName << " already exists" << endl;
         return false;
     }
-
-    if (!tableCatalogue.isTable(parsedQuery.crossFirstRelationName) || !tableCatalogue.isTable(parsedQuery.crossSecondRelationName)){
-        cout << "SEMANTIC ERROR: Cross relations don't exist" << endl;
+    // Table should exist
+    if (!tableCatalogue.isTable(crossQuery.table1Name)){
+        cout << "SEMANTIC ERROR: Relation " << crossQuery.table1Name << " doesn't exist" << endl;
+        return false;
+    }
+    if (!tableCatalogue.isTable(crossQuery.table2Name)){
+        cout << "SEMANTIC ERROR: Relation " << crossQuery.table2Name << " doesn't exist" << endl;
         return false;
     }
     return true;
@@ -34,23 +36,25 @@ bool semanticParseCROSS(){
 
 void executeCROSS(){
     logger.log("executeCROSS");
+    string table1Name = crossQuery.table1Name;
+    string table2Name = crossQuery.table2Name;
 
-    Table table1 = *(tableCatalogue.getTable(parsedQuery.crossFirstRelationName));
-    Table table2 = *(tableCatalogue.getTable(parsedQuery.crossSecondRelationName));
+    Table table1 = *(tableCatalogue.getTable(table1Name));
+    Table table2 = *(tableCatalogue.getTable(table2Name));
 
     vector<string> columns;
 
     //If both tables are the same i.e. CROSS a a, then names are indexed as a1 and a2
     if(table1.tableName == table2.tableName){
-        parsedQuery.crossFirstRelationName += "1";
-        parsedQuery.crossSecondRelationName += "2";
+        table1Name += "1";
+        table2Name += "2";
     }
 
     //Creating list of column names
     for (int columnCounter = 0; columnCounter < table1.columnCount; columnCounter++){
         string columnName = table1.columns[columnCounter];
         if (table2.isColumn(columnName)){
-            columnName = parsedQuery.crossFirstRelationName + "_" + columnName;
+            columnName = table1Name + "_" + columnName;
         }
         columns.emplace_back(columnName);
     }
@@ -58,12 +62,12 @@ void executeCROSS(){
     for (int columnCounter = 0; columnCounter < table2.columnCount; columnCounter++){
         string columnName = table2.columns[columnCounter];
         if (table1.isColumn(columnName)){
-            columnName = parsedQuery.crossSecondRelationName + "_" + columnName;
+            columnName = table2Name + "_" + columnName;
         }
         columns.emplace_back(columnName);
     }
 
-    Table *resultantTable = new Table(parsedQuery.crossResultRelationName, columns);\
+    Table *resultantTable = new Table(crossQuery.resultTableName, columns);
 
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();
@@ -87,5 +91,6 @@ void executeCROSS(){
     }
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+    crossQuery.clear();
     return;
 }

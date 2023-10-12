@@ -1,7 +1,5 @@
-#include<iostream>
-#include<bits/stdc++.h>
-#include<sys/stat.h> 
-#include<fstream>
+#pragma once
+#include "base.h"
 
 using namespace std;
 /**
@@ -31,6 +29,8 @@ public:
     Matrix(string matrixName);
     bool load();
     bool blockify(vector<int> &offsets);
+    // bool load();
+    // bool blockify(char *fileData, int fileLength);
     void print();
     void makePermanent();
     bool isPermanent();

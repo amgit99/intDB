@@ -1,9 +1,15 @@
 *.o
+*.py
+TEST*.*
 log
 server
 data/temp/**
 data/exports/**
+docs/todo.md
 settings.json
 .vscode/**
 .github/**
 .DS_STORE
+src/lex.yy.c
+src/parser.tab.c
+include/parser.tab.h

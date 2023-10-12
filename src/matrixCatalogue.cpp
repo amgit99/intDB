@@ -1,4 +1,4 @@
-#include "global.h"
+#include "globals.h"
 
 void MatrixCatalogue::insertMatrix(Matrix* matrix){
     logger.log("MatrixCatalogue::~insertMatrix");
@@ -37,7 +37,7 @@ void MatrixCatalogue::print(){
         cout << rel.first << endl;
         rowCount++;
     }
-    printRowCount(rowCount);
+    cout << "\n\nRow Count: " << rowCount << endl;
 }
 
 MatrixCatalogue::~MatrixCatalogue(){

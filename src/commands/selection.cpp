@@ -1,69 +1,50 @@
-#include "global.h"
+#include "globals.h"
 /**
  * @brief 
  * SYNTAX: R <- SELECT column_name bin_op [column_name | int_literal] FROM relation_name
  */
-bool syntacticParseSELECTION(){
-    logger.log("syntacticParseSELECTION");
-    if (tokenizedQuery.size() != 8 || tokenizedQuery[6] != "FROM"){
-        cout << "SYNTAC ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = SELECTION;
-    parsedQuery.selectionResultRelationName = tokenizedQuery[0];
-    parsedQuery.selectionFirstColumnName = tokenizedQuery[3];
-    parsedQuery.selectionRelationName = tokenizedQuery[7];
 
-    string binaryOperator = tokenizedQuery[4];
-    if (binaryOperator == "<")
-        parsedQuery.selectionBinaryOperator = LESS_THAN;
-    else if (binaryOperator == ">")
-        parsedQuery.selectionBinaryOperator = GREATER_THAN;
-    else if (binaryOperator == ">=" || binaryOperator == "=>")
-        parsedQuery.selectionBinaryOperator = GEQ;
-    else if (binaryOperator == "<=" || binaryOperator == "=<")
-        parsedQuery.selectionBinaryOperator = LEQ;
-    else if (binaryOperator == "==")
-        parsedQuery.selectionBinaryOperator = EQUAL;
-    else if (binaryOperator == "!=")
-        parsedQuery.selectionBinaryOperator = NOT_EQUAL;
-    else{
-        cout << "SYNTAC ERROR" << endl;
-        return false;
-    }
-    regex numeric("[-]?[0-9]+");
-    string secondArgument = tokenizedQuery[5];
-    if (regex_match(secondArgument, numeric)){
-        parsedQuery.selectType = INT_LITERAL;
-        parsedQuery.selectionIntLiteral = stoi(secondArgument);
-    }
-    else{
-        parsedQuery.selectType = COLUMN;
-        parsedQuery.selectionSecondColumnName = secondArgument;
-    }
-    return true;
+void Selection::clear(){
+    this->resultTableName = "";
+    this->binop = "";
+    this->lcolumnName = "";
+    this->rIntValue = 0;
+    this->rcolumnName = "";
+    this->sourceTableName = "";
+    RESULT_TABLE_NAME = "";
+    CONDITION_L_COLUMN_NAME = "";
+    CONDITION_BINOP = "";
+    CONDITION_R_INTVAL = 0;
+    CONDITION_R_COLUMN_NAME = "";
+    return;
 }
 
 bool semanticParseSELECTION(){
     logger.log("semanticParseSELECTION");
 
-    if (tableCatalogue.isTable(parsedQuery.selectionResultRelationName)){
-        cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
+    selectionQuery.resultTableName = RESULT_TABLE_NAME;
+    selectionQuery.lcolumnName = CONDITION_L_COLUMN_NAME;
+    selectionQuery.binop = CONDITION_BINOP;
+    selectionQuery.rIntValue = CONDITION_R_INTVAL;
+    selectionQuery.rcolumnName = CONDITION_R_COLUMN_NAME;
+
+    if (tableCatalogue.isTable(selectionQuery.resultTableName)){
+        cout << "SEMANTIC ERROR: Resultant relation "<< selectionQuery.resultTableName << " already exists" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isTable(parsedQuery.selectionRelationName)){
-        cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
+    if (!tableCatalogue.isTable(selectionQuery.sourceTableName)){
+        cout << "SEMANTIC ERROR: Relation " << selectionQuery.sourceTableName << " doesn't exist" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionFirstColumnName, parsedQuery.selectionRelationName)){
-        cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
+    if (!tableCatalogue.isColumnFromTable(selectionQuery.lcolumnName, selectionQuery.sourceTableName)){
+        cout << "SEMANTIC ERROR: Column " << selectionQuery.lcolumnName << " doesn't exist in relation "<< selectionQuery.sourceTableName << endl;
         return false;
     }
 
-    if (parsedQuery.selectType == COLUMN){
-        if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionSecondColumnName, parsedQuery.selectionRelationName)){
+    if (selectionQuery.selectType == COLUMN){
+        if (!tableCatalogue.isColumnFromTable(selectionQuery.rcolumnName, selectionQuery.sourceTableName)){
             cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
             return false;
         }
@@ -90,35 +71,52 @@ bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator){
     }
 }
 
+BinaryOperator binopStringToBinaryOperator(string binop){
+    if (binop == "<")
+        return LESS_THAN;
+    else if (binop == ">")
+        return GREATER_THAN;
+    else if (binop == ">=" || binop == "=>")
+        return GEQ;
+    else if (binop == "<=" || binop == "=<")
+        return LEQ;
+    else if (binop == "==")
+        return EQUAL;
+    else if (binop == "!=")
+        return NOT_EQUAL;
+    else
+        return NO_BINOP_CLAUSE;
+}
+
 void executeSELECTION(){
     logger.log("executeSELECTION");
 
-    Table table = *tableCatalogue.getTable(parsedQuery.selectionRelationName);
-    Table* resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
+    Table table = *tableCatalogue.getTable(selectionQuery.sourceTableName);
+    Table* resultantTable = new Table(selectionQuery.resultTableName, table.columns);
     Cursor cursor = table.getCursor();
     vector<int> row = cursor.getNext();
-    int firstColumnIndex = table.getColumnIndex(parsedQuery.selectionFirstColumnName);
-    int secondColumnIndex;
-    if (parsedQuery.selectType == COLUMN)
-        secondColumnIndex = table.getColumnIndex(parsedQuery.selectionSecondColumnName);
+    int lColumnIndex = table.getColumnIndex(selectionQuery.lcolumnName);
+    int rColumnIndex;
+    if (selectionQuery.selectType == COLUMN)
+        rColumnIndex = table.getColumnIndex(selectionQuery.rcolumnName);
     while (!row.empty()){
-
-        int value1 = row[firstColumnIndex];
+        int value1 = row[lColumnIndex];
         int value2;
-        if (parsedQuery.selectType == INT_LITERAL)
-            value2 = parsedQuery.selectionIntLiteral;
+        if (selectionQuery.selectType == INT_LITERAL)
+            value2 = selectionQuery.rIntValue;
         else
-            value2 = row[secondColumnIndex];
-        if (evaluateBinOp(value1, value2, parsedQuery.selectionBinaryOperator))
+            value2 = row[rColumnIndex];
+        if (evaluateBinOp(value1, value2, binopStringToBinaryOperator(selectionQuery.binop)))
             resultantTable->writeRow<int>(row);
         row = cursor.getNext();
     }
     if(resultantTable->blockify())
         tableCatalogue.insertTable(resultantTable);
     else{
-        cout<<"Empty Table"<<endl;
+        cout << "Empty Table" << endl;
         resultantTable->unload();
         delete resultantTable;
     }
+    selectionQuery.clear();
     return;
 }

@@ -1,4 +1,5 @@
-#include "global.h"
+#include "table.h"
+#include "globals.h"
 
 /**
  * @brief Construct a new Table:: Table object
@@ -37,6 +38,21 @@ Table::Table(string tableName, vector<string> columns){
     this->columnCount = columns.size();
     this->maxRowsPerBlock = (uint)((BLOCK_SIZE * 1000) / (sizeof(int) * columnCount));
     this->writeRow<string>(columns);
+}
+
+
+Table::Table(string tableName, Table* ogTable){
+    logger.log("Table::Table");
+    this->sourceFileName = "data/temp/" + tableName + ".csv";
+    this->tableName = tableName;
+
+    this->columns = ogTable->columns;
+    this->distinctValuesPerColumnCount = ogTable->distinctValuesPerColumnCount;
+    this->columnCount = ogTable->columnCount;
+    this->rowCount = ogTable->rowCount;
+    this->blockCount = ogTable->blockCount;
+    this->maxRowsPerBlock = ogTable->maxRowsPerBlock;
+    this->rowsPerBlockCount = ogTable->rowsPerBlockCount;
 }
 
 /**
@@ -203,13 +219,14 @@ void Table::print(){
     //print headings
     this->writeRow(this->columns, cout);
 
-    Cursor cursor(this->tableName, 0);
+    MyCursor cursor(this->tableName, 0);
+    logger.log("REACHED HEREEEEEEE");
     vector<int> row;
     for (int rowCounter = 0; rowCounter < count; rowCounter++){
-        row = cursor.getNext();
+        row = cursor.getRow();
         this->writeRow(row, cout);
     }
-    printRowCount(this->rowCount);
+    cout << "\n\nRow Count: " << this->rowCount << endl;
 }
 
 
@@ -300,7 +317,11 @@ Cursor Table::getCursor(){
 int Table::getColumnIndex(string columnName){
     logger.log("Table::getColumnIndex");
     for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++){
-        if (this->columns[columnCounter] == columnName)
+        if (this->columns[columnCounter] == columnName){
+            logger.log("Table::Left getColumnIndex");
             return columnCounter;
+        }
     }
+    logger.log("Table::Left getColumnIndex");
+    return -1;
 }

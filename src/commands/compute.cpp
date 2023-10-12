@@ -1,36 +1,28 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
 
 /**
  * @brief 
  * SYNTAX: COMPUTE A
  */
 
-bool syntacticParseCOMPUTE(){
-    logger.log("syntacticParseCOMPUTE");
-    if (tokenizedQuery.size() != 2){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = COMPUTE;
-    parsedQuery.computeName = tokenizedQuery[1];
-    return true;
-}
-
-bool semanticParseCOMPUTE(){
+bool semanticParseCOMPUTE(char* matrixName){
+    string mat = matrixName;
     logger.log("semanticParseCOMPUTE");
-    if (matrixCatalogue.isMatrix(parsedQuery.computeName))
+    if (matrixCatalogue.isMatrix(mat))
         return true;
     cout << "SEMANTIC ERROR: No such matrix exists" << endl;
     return false;
 }
 
-void executeCOMPUTE(){
+void executeCOMPUTE(char* matrixName){
+    string mat = matrixName;
     logger.log("executeCOMPUTE");
     resetBlockStats();
 
-    Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.computeName);
+    Matrix* matrix = matrixCatalogue.getMatrix(mat);
 
-    string originalMatrixName = parsedQuery.computeName;
+    string originalMatrixName = mat;
     string originalSourceFileName = matrix->sourceFileName;
 
     // NOTE: "A" is placeholder used in the comments below that refers to the original matrix name

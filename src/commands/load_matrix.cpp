@@ -1,37 +1,31 @@
-#include "global.h"
+#include "globals.h"
+#include "matrix.h"
+#include "semanticParser.h"
 /**
  * @brief 
  * SYNTAX: LOAD MATRIX A
  */
-bool syntacticParseLOADMATRIX(){
-    logger.log("syntacticParseLOADMATRIX");
-    if (tokenizedQuery.size() != 3){
-        cout << "SYNTAX ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType= LOAD_MATRIX;
-    parsedQuery.loadMatrixName = tokenizedQuery[2];
-    return true;
-}
 
-bool semanticParseLOADMATRIX(){
+bool semanticParseLOADMATRIX(char* matrixName){
     logger.log("semanticParseLOADMATRIX");
-    if (matrixCatalogue.isMatrix(parsedQuery.loadMatrixName)){
+    string mat = matrixName;
+    if (matrixCatalogue.isMatrix(mat)){
         cout << "SEMANTIC ERROR: Matrix already exists" << endl;
         return false;
     }
-    if (!isMatExists(parsedQuery.loadMatrixName)){
+    if (!fileExists(mat)){
         cout << "SEMANTIC ERROR: Data file doesn't exist" << endl;
         return false;
     }
     return true;
 }
 
-void executeLOADMATRIX(){
+void executeLOADMATRIX(char* matrixName){
     logger.log("executeLOADMATRIX");
+    string mat = matrixName;
     resetBlockStats();
 
-    Matrix *matrix = new Matrix(parsedQuery.loadMatrixName);
+    Matrix *matrix = new Matrix(mat);
     if(matrix->load()){
         matrixCatalogue.insertMatrix(matrix);
         cout << "Loaded Matrix of Order: " << matrix->rowCount << endl;

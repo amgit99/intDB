@@ -1,4 +1,5 @@
-#include "matrix.h"
+#pragma once
+#include "base.h"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ class Logger{
     string logFile = "log";
     ofstream fout;
     
-    public:
+public:
 
     Logger();
     void log(string logString);

@@ -1,28 +1,29 @@
+#pragma once
 #include"semanticParser.h"
 
 void executeCommand();
 
-void executeCLEAR();
+void executeCLEAR(char* _tableName);
 void executeCROSS();
 void executeDISTINCT();
-void executeEXPORT();
+void executeEXPORT(char* _tableName);
 void executeINDEX();
 void executeJOIN();
 void executeLIST();
-void executeLOAD();
-void executePRINT();
+void executeLOAD(char* _tableName);
+void executePRINT(char* _tableName);
 void executePROJECTION();
-void executeRENAME();
+void executeRENAME(char* _oldCol, char* _newCol, char* _tableName);
 void executeSELECTION();
 void executeSORT();
-void executeSOURCE();
-void executeLOADMATRIX();
-void executePRINTMATRIX();
-void executeTRANSPOSEMATRIX();
-void executeRENAMEMATRIX();
-void executeEXPORTMATRIX();
-void executeCHECKSYMMETRY();
-void executeCOMPUTE();
+void executeSOURCE(char* fileName);
+void executeLOADMATRIX(char* matrixName);
+void executePRINTMATRIX(char* matrixName);
+void executeTRANSPOSEMATRIX(char* matrixName);
+void executeRENAMEMATRIX(char* oldName, char* newName);
+void executeEXPORTMATRIX(char* matrixName);
+void executeCHECKSYMMETRY(char* matrixName);
+void executeCOMPUTE(char* matrixName);
 
-bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
+// bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 void printRowCount(int rowCount);
